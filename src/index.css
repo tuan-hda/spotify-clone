@@ -1,3 +1,58 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: CircularSpotify;
+  src: url(./assets/fonts/CircularSpotifyText-Light.otf);
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: CircularSpotify;
+  src: url(./assets/fonts/CircularSpotifyText-Book.otf);
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: CircularSpotify;
+  src: url(./assets/fonts/CircularSpotifyText-BookItalic.otf);
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: CircularSpotify;
+  src: url(./assets/fonts/CircularSpotifyText-Medium.otf);
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: CircularSpotify;
+  src: url(./assets/fonts/CircularSpotifyText-MediumItalic.otf);
+  font-weight: 500;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: CircularSpotify;
+  src: url(./assets/fonts/CircularSpotifyText-Bold.otf);
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: CircularSpotify;
+  src: url(./assets/fonts/CircularSpotifyText-Black.otf);
+  font-weight: 900;
+}
+
+@font-face {
+  font-family: CircularSpotify;
+  src: url(./assets/fonts/CircularSpotifyText-Black.otf);
+  font-weight: 900;
+  font-style: italic;
+}
+
+.liked-gradient {
+  background: linear-gradient(135deg, #450af5, #c4efd9);
+}
