@@ -81,7 +81,7 @@ export interface IconsProps {
 
 export default function Icons({ type, isSelected = false, className }: IconsProps) {
   return (
-    <div className={classNames(className, isSelected ? "fill-white" : "fill-s-gray")}>
+    <div className={classNames(className, isSelected ? "fill-white" : "fill-s-gray-1")}>
       {isSelected ? fillIcons[type] : icons[type]}
     </div>
   )

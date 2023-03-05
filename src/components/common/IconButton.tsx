@@ -1,9 +1,8 @@
 import classNames from "classnames"
-import { NavLink } from "react-router-dom"
-
 interface ButtonProps<T extends React.ElementType> {
   as?: T
   children?: React.ReactNode
+  className?: string
 }
 
 interface Props {
@@ -14,6 +13,7 @@ interface Props {
 export default function IconButton<T extends React.ElementType = "button">({
   icon,
   children,
+  className,
   isSelected = false,
   as,
   ...props
@@ -21,12 +21,12 @@ export default function IconButton<T extends React.ElementType = "button">({
   const Component = as || "button"
 
   return (
-    <Component {...props} className='px-4 h-10 gap-4 flex items-center group'>
+    <Component {...props} className={classNames("h-10 gap-4 flex items-center group", className)}>
       {icon}
       <span
-        className={classNames("text-s-gray group-hover:text-white font-bold transition duration-300", {
+        className={classNames("text-s-gray-1 group-hover:text-white font-bold transition duration-300", {
           "text-white": isSelected,
-          "text-s-gray": !isSelected,
+          "text-s-gray-1": !isSelected,
         })}
       >
         {children}

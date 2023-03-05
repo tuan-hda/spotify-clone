@@ -1,11 +1,13 @@
-import Sidebar from "components/Sidebar"
+import Sidebar from "components/sidebar"
+import { Login } from "components/user"
 import { Outlet } from "react-router-dom"
 
 export default function MainLayout() {
   return (
-    <div className='bg-black h-screen text-white font text-sm flex'>
-      <Sidebar />
-      <Outlet />
-    </div>
+    <Login />
+    // <div className='flex h-screen bg-black text-sm text-white'>
+    //   <Sidebar />
+    //   <Outlet />
+    // </div>
   )
 }

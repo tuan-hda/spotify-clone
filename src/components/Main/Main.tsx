@@ -1,3 +1,10 @@
+import { Header } from "components/common"
+
 export default function Main() {
-  return <div>Center</div>
+  return (
+    <div>
+      <Header />
+      Center
+    </div>
+  )
 }
