@@ -21,16 +21,19 @@ export default function IconButton<T extends React.ElementType = "button">({
   const Component = as || "button"
 
   return (
-    <Component {...props} className={classNames("h-10 gap-4 flex items-center group", className)}>
+    <Component {...props} className={classNames("group flex h-10 w-full items-center gap-4", className)}>
       {icon}
-      <span
-        className={classNames("text-s-gray-1 group-hover:text-white font-bold transition duration-300", {
-          "text-white": isSelected,
-          "text-s-gray-1": !isSelected,
-        })}
+      <p
+        className={classNames(
+          "min-w-0 overflow-hidden text-ellipsis whitespace-nowrap font-bold text-s-gray-1 transition duration-300 group-hover:text-white",
+          {
+            "text-white": isSelected,
+            "text-s-gray-1": !isSelected,
+          }
+        )}
       >
         {children}
-      </span>
+      </p>
     </Component>
   )
 }

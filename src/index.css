@@ -10,6 +10,22 @@
   .scrollbar-hidden::-webkit-scrollbar {
     display: none;
   }
+
+  div:has(> div.custom-scrollbar) {
+    width: 12px !important;
+  }
+
+  .custom-scrollbar-container .custom-scrollbar {
+    opacity: 0;
+    position: relative;
+    z-index: 2;
+    transition-property: opacity, color, background-color;
+    transition-duration: 300;
+  }
+
+  .custom-scrollbar-container:hover .custom-scrollbar {
+    opacity: 100;
+  }
 }
 
 @font-face {
