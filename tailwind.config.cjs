@@ -7,11 +7,16 @@ module.exports = {
       fontSize: {
         "3xl": ["2rem", "2rem"],
       },
+      boxShadow: {
+        "s-1": "10px 0px 20px -5px rgba(0, 0, 0, 0.25)",
+        "s-2": "0px 10px 20px -5px rgba(0, 0, 0, 0.25)",
+      },
       colors: {
         "s-black": {
           1: "#191414",
           2: "#0D1118",
           3: "#121212",
+          4: "#171717",
         },
         "s-green": {
           1: "#1ED760",

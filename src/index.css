@@ -26,6 +26,20 @@
   .custom-scrollbar-container:hover .custom-scrollbar {
     opacity: 100;
   }
+
+  .animate-shine {
+    --bg-from: #6a6a6a;
+    --bg-to: #7d7d7d;
+    background: linear-gradient(90deg, var(--bg-from) 8%, var(--bg-to) 18%, var(--bg-from) 33%);
+    background-size: 300% 100%;
+    animation: 3.5s shine linear infinite;
+  }
+
+  @keyframes shine {
+    to {
+      background-position-x: -300%;
+    }
+  }
 }
 
 @font-face {

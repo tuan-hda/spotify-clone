@@ -3,7 +3,6 @@ import { AiFillCaretDown } from "react-icons/ai"
 import HistoryButton from "./HistoryButton"
 import { useMemo } from "react"
 import { useScrollPosition } from "store/scrollPosition"
-import classNames from "classnames"
 
 const OPAQUE_POINT = 280
 

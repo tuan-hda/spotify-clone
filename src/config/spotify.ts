@@ -1,7 +1,7 @@
 export const authEndpoint = "https://accounts.spotify.com/authorize"
-const redirectUri = "https://localhost:5173/"
-const clientId = "be8600a39bc843b1958328bea81f29ae"
-
+const redirectUri = import.meta.env.VITE_REDIRECT_URI
+const clientId = import.meta.env.VITE_CLIENT_ID
+const responseType = "code"
 const scopes = [
   "ugc-image-upload",
   "user-read-playback-state",
@@ -24,6 +24,6 @@ const scopes = [
   "user-read-private",
 ]
 
-export const loginUrl = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
+export const loginUrl = `${authEndpoint}?client_id=${clientId}&response_type=${responseType}&redirect_uri=${redirectUri}&scope=${scopes.join(
   "%20"
-)}&response_type=token&show_dialog=true`
+)}&show_dialog=true`
