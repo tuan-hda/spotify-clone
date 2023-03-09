@@ -1,9 +1,10 @@
-import Divider from "components/common/Divider"
-import IconButton from "components/common/IconButton"
-import Icons from "components/common/Icons"
-import { Link } from "react-router-dom"
-import Logo from "./Logo"
-import Playlist from "./Playlist"
+import Divider from '~/components/common/Divider'
+import IconButton from '~/components/common/IconButton'
+import Icons from '~/components/common/Icons'
+import { Link } from 'react-router-dom'
+import Logo from './Logo'
+import Playlist from './Playlist'
+
 interface Props {
   width: number
 }
@@ -15,7 +16,7 @@ export default function Sidebar({ width = 384 }: Props) {
       style={{ width }}
     >
       <Logo />
-      <div className='mt-6 px-2'>
+      <div className='mt-4 px-2'>
         <IconButton className='px-4' as={Link} to='/' isSelected icon={<Icons type='home' isSelected />}>
           Home
         </IconButton>

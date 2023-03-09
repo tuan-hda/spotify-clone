@@ -1,6 +1,6 @@
-import { mountStoreDevtool } from "simple-zustand-devtools"
-import { create } from "zustand"
-import { immer } from "zustand/middleware/immer"
+import { mountStoreDevtool } from 'simple-zustand-devtools'
+import { create } from 'zustand'
+import { immer } from 'zustand/middleware/immer'
 
 interface State {
   top: number
@@ -15,10 +15,10 @@ export const useScrollPosition = create<State & Actions>()(
     top: 0,
     setTop: (top) => {
       set(() => ({ top }))
-    },
+    }
   }))
 )
 
-if (process.env.NODE_ENV === "development") {
-  mountStoreDevtool("scrollPositionStore", useScrollPosition)
+if (process.env.NODE_ENV === 'development') {
+  mountStoreDevtool('scrollPositionStore', useScrollPosition)
 }

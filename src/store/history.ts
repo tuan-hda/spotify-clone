@@ -1,6 +1,6 @@
-import { mountStoreDevtool } from "simple-zustand-devtools"
-import { create } from "zustand"
-import { immer } from "zustand/middleware/immer"
+import { mountStoreDevtool } from 'simple-zustand-devtools'
+import { create } from 'zustand'
+import { immer } from 'zustand/middleware/immer'
 
 interface State {
   length: number
@@ -31,10 +31,10 @@ export const useHistory = create<State & Actions>()(
       set((state) => {
         state.length = state.index + 1
       })
-    },
+    }
   }))
 )
 
-if (process.env.NODE_ENV === "development") {
-  mountStoreDevtool("historyStore", useHistory)
+if (process.env.NODE_ENV === 'development') {
+  mountStoreDevtool('historyStore', useHistory)
 }

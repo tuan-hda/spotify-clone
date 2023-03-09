@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from 'react'
 
 const MAX_WIDTH = 384
 const MIN_WIDTH = 150
@@ -6,14 +6,14 @@ const MIN_WIDTH = 150
 const useResize = () => {
   const [drag, setDrag] = useState({
     active: false,
-    x: 0,
+    x: 0
   })
-  const [width, setWidth] = useState<number>(Number(localStorage.getItem("sidebar-width")) || MAX_WIDTH)
+  const [width, setWidth] = useState<number>(Number(localStorage.getItem('sidebar-width')) || MAX_WIDTH)
 
   const startResize = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setDrag(() => ({
       active: true,
-      x: e.clientX,
+      x: e.clientX
     }))
   }
 
@@ -31,7 +31,7 @@ const useResize = () => {
         setDrag({ ...drag, x: e.clientX })
       }
       setWidth(newW)
-      localStorage.setItem("sidebar-width", String(newW))
+      localStorage.setItem('sidebar-width', String(newW))
     }
   }
 

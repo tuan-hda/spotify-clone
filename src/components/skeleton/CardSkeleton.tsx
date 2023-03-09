@@ -1,8 +1,8 @@
-import LineSkeleton from "./LineSkeleton"
+import LineSkeleton from './LineSkeleton'
 
 const style = {
-  "--bg-from": "#333",
-  "--bg-to": "#444",
+  '--bg-from': '#333',
+  '--bg-to': '#444'
 } as React.CSSProperties
 
 const CardSkeleton = () => {

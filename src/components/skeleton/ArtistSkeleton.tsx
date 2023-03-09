@@ -1,4 +1,4 @@
-import LineSkeleton from "./LineSkeleton"
+import LineSkeleton from './LineSkeleton'
 
 const ArtistSkeleton = () => {
   return (

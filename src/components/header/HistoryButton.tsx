@@ -1,24 +1,24 @@
-import classNames from "classnames"
-import { BsChevronLeft, BsChevronRight } from "react-icons/bs"
-import { useLocation, useNavigate } from "react-router-dom"
-import { useHistory } from "store/history"
-import { shallow } from "zustand/shallow"
+import classNames from 'classnames'
+import { BsChevronLeft, BsChevronRight } from 'react-icons/bs'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useHistory } from '~/store/history'
+import { shallow } from 'zustand/shallow'
 
 interface Props {
   type?: string
 }
 
-const HistoryButton = ({ type = "back" }: Props) => {
+const HistoryButton = ({ type = 'back' }: Props) => {
   const [length, index, decIndex, incIndex] = useHistory(
     (state) => [state.length, state.index, state.decIndex, state.incIndex],
     shallow
   )
   const navigate = useNavigate()
   const location = useLocation()
-  const Icon = type === "back" ? BsChevronLeft : BsChevronRight
+  const Icon = type === 'back' ? BsChevronLeft : BsChevronRight
 
   const handleClick = () => {
-    if (type === "back") {
+    if (type === 'back') {
       navigate(-1)
       decIndex()
     } else {
@@ -28,7 +28,7 @@ const HistoryButton = ({ type = "back" }: Props) => {
   }
 
   const isEnabled = () => {
-    if (type === "back") {
+    if (type === 'back') {
       if (location.state?.from) return true
     } else {
       if (index < length) return true
@@ -43,15 +43,15 @@ const HistoryButton = ({ type = "back" }: Props) => {
         onClick={handleClick}
         disabled={!isEnabled()}
         className={classNames(
-          "pointer-events-auto flex h-8 w-8 items-center justify-center rounded-full",
-          isEnabled() ? "bg-s-black-2" : "bg-s-blue-1"
+          'pointer-events-auto flex h-8 w-8 items-center justify-center rounded-full',
+          isEnabled() ? 'bg-s-black-2' : 'bg-s-blue-1'
         )}
       >
         <Icon
           className={classNames(
-            "h-5 w-5",
-            isEnabled() ? "text-white" : "text-s-gray-1",
-            type === "back" ? "mr-0.5" : "ml-0.5"
+            'h-5 w-5',
+            isEnabled() ? 'text-white' : 'text-s-gray-1',
+            type === 'back' ? 'mr-0.5' : 'ml-0.5'
           )}
         />
       </button>

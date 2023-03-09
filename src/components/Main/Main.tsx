@@ -1,18 +1,9 @@
-import { ArtistSkeleton, CardSkeleton } from "components/skeleton"
-import { LineSkeleton } from "components/skeleton"
-import { useEffect, useRef } from "react"
-import { Scrollbars } from "react-custom-scrollbars"
-import { useScrollPosition } from "store/scrollPosition"
-import { useSpotifyStore } from "store/spotify"
-import SpotifyWebApi from "spotify-web-api-node"
-import { shallow } from "zustand/shallow"
-
-const spotifyApi = new SpotifyWebApi({
-  clientId: import.meta.env.VITE_CLIENT_ID,
-})
+import { LineSkeleton, ArtistSkeleton, CardSkeleton } from '~/components/skeleton'
+import { useRef } from 'react'
+import { Scrollbars } from 'react-custom-scrollbars'
+import { useScrollPosition } from '~/store/scrollPosition'
 
 export default function Main() {
-  const [accessToken, setUser] = useSpotifyStore((state) => [state.accessToken, state.setUser], shallow)
   const ref = useRef<Scrollbars>(null)
   const setTop = useScrollPosition((state) => state.setTop)
 
@@ -20,22 +11,15 @@ export default function Main() {
     setTop(ref.current?.getScrollTop() || 0)
   }
 
-  useEffect(() => {
-    spotifyApi.setAccessToken(accessToken)
-    spotifyApi.getMe().then((response) => {
-      setUser(response.body)
-    })
-  }, [accessToken])
-
   return (
     <Scrollbars
       onScroll={handleScroll}
       ref={ref}
       className='custom-scrollbar-container -top-16 h-screen'
-      renderThumbVertical={({ style, ...props }) => (
+      renderThumbVertical={({ ...props }) => (
         <div
           {...props}
-          className='custom-scrollbar bg-[#a6a6a6] bg-opacity-50  duration-300 hover:bg-[#ffffff] hover:bg-opacity-50'
+          className='custom-scrollbar bg-[#a6a6a6] bg-opacity-50 duration-300 hover:bg-[#ffffff] hover:bg-opacity-50'
         />
       )}
     >

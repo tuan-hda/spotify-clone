@@ -1,8 +1,7 @@
-import { useNavigate } from "react-router-dom"
-import { getNewAccessToken, getTokens } from "api/spotify.api"
-import { useEffect } from "react"
-import { useSpotifyStore } from "store/spotify"
-import { getCodeFromUrl } from "./../utils/utils"
+import { getNewAccessToken, getTokens } from '~/api/spotify.api'
+import { useEffect } from 'react'
+import { useSpotifyStore } from '~/store/spotify'
+import { getCodeFromUrl } from '~/utils/utils'
 
 const useAuth = () => {
   const code = getCodeFromUrl()
@@ -11,10 +10,10 @@ const useAuth = () => {
   useEffect(() => {
     ;(async () => {
       try {
-        if (code) {
+        if (code && typeof setAccessToken === 'function') {
           const response = await getTokens(code)
           setAccessToken(response.data.accessToken)
-          window.history.pushState({}, document.title, "/")
+          window.history.pushState({}, document.title, '/')
         } else {
           const response = await getNewAccessToken()
           setAccessToken(response.data.accessToken)
@@ -23,7 +22,7 @@ const useAuth = () => {
         console.log(error)
       }
     })()
-  }, [code])
+  }, [code, setAccessToken])
 }
 
 export default useAuth

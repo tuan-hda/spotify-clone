@@ -1,6 +1,6 @@
-import SpotifyLogo from "assets/logo/Spotify_Logo_RGB_Green.png"
-import { Button } from "components/common"
-import { loginUrl } from "config/spotify"
+import SpotifyLogo from '~/assets/logo/Spotify_Logo_RGB_Green.png'
+import { Button } from '~/components/common'
+import { loginUrl } from '~/config/spotify'
 
 const Login = () => {
   const handleClick = () => {

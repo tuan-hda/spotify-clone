@@ -19,8 +19,6 @@
     opacity: 0;
     position: relative;
     z-index: 2;
-    transition-property: opacity, color, background-color;
-    transition-duration: 300;
   }
 
   .custom-scrollbar-container:hover .custom-scrollbar {
@@ -73,6 +71,6 @@
 }
 
 * {
-  font-family: "CircularSpotify", "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont", '"Segoe UI"',
-    "Roboto", '"Helvetica Neue"', "Arial", '"Noto Sans"', "sans-serif";
+  font-family: 'CircularSpotify', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"',
+    'Roboto', '"Helvetica Neue"', 'Arial', '"Noto Sans"', 'sans-serif';
 }
