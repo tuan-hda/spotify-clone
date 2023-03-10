@@ -38,6 +38,21 @@
       background-position-x: -300%;
     }
   }
+
+  .tooltip-shadow {
+    box-shadow: 0px 10px 20px -5px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  @property --start-color {
+    syntax: '<color>';
+    initial-value: magenta;
+    inherits: false;
+  }
+
+  .gradient-transition {
+    background: linear-gradient(var(--start-color), #121212);
+    transition: --start-color 0.8s;
+  }
 }
 
 @font-face {

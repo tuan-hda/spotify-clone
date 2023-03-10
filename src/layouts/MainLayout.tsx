@@ -4,10 +4,13 @@ import Header from '~/components/header'
 import useResize from '~/hooks/useResize'
 import { useSpotifyStore } from '~/store/spotify'
 import { Login } from '~/components/user'
+import useAuth from '~/hooks/useAuth'
 
 export default function MainLayout() {
   const accessToken = useSpotifyStore((state) => state.accessToken)
+  // const spotifyApi = useSpotifyStore((state) => state.spotifyApi)
   const { width, stopResize, startResize, onResize } = useResize()
+  useAuth()
 
   return (
     <>
@@ -21,7 +24,7 @@ export default function MainLayout() {
           <Sidebar width={width} />
           <div
             role='presentation'
-            className='group absolute top-0 z-[2] flex h-screen w-2 cursor-col-resize'
+            className='group absolute top-0 z-[2] flex h-screen w-2 cursor-e-resize'
             style={{
               left: width - 4
             }}
@@ -29,6 +32,7 @@ export default function MainLayout() {
           >
             <div className='m-auto h-full border-[#4C4C4C] group-hover:border-r' />
           </div>
+
           <div className='relative flex-1 flex-shrink bg-s-black-3'>
             <Header />
             <Outlet />
