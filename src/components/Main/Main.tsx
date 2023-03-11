@@ -15,10 +15,13 @@ export default function Main() {
 
   const greeting = useMemo(() => {
     const midday = new Date()
+    const evening = new Date()
     midday.setHours(12, 0, 0)
+    evening.setHours(18, 0, 0)
     const current = new Date()
 
     if (current < midday) return 'morning'
+    if (current < evening) return 'afternoon'
     return 'evening'
   }, [])
 

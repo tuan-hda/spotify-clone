@@ -1,20 +1,12 @@
-import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom'
-import MainLayout from '~/layouts/MainLayout'
-import { Suspense, lazy, useCallback } from 'react'
+import { createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom'
+import { Suspense, useCallback } from 'react'
 import { SWRConfig } from 'swr'
 import { getNewAccessToken } from './api/spotify.api'
 import { useSpotifyStore } from './store/spotify'
 import { SWRDevTools } from 'swr-devtools'
+import routes from './config/routes'
 
-const Main = lazy(() => import('~/components/main'))
-
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path='/' element={<MainLayout />}>
-      <Route index element={<Main />} />
-    </Route>
-  )
-)
+const router = createBrowserRouter(createRoutesFromElements(routes))
 
 export default function App() {
   const setAccessToken = useSpotifyStore((state) => state.setAccessToken)

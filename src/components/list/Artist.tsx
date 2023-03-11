@@ -2,9 +2,10 @@ import { BsFillPlayFill } from 'react-icons/bs'
 import useStyleStore from '~/store/style'
 import { useCallback, useRef, useState } from 'react'
 import ColorThief from 'colorthief'
-import { rgbToHexWithOpacity } from '~/utils/utils'
+import { rgbToHex } from '~/utils/utils'
 import LazyLoad from 'react-lazyload'
 import { shallow } from 'zustand/shallow'
+import tinycolor from 'tinycolor2'
 
 interface Props extends SpotifyApi.SingleArtistResponse {
   isDefault?: boolean
@@ -31,10 +32,11 @@ const Artist = ({ images, name, isDefault = false }: Props) => {
       const colorThief = new ColorThief()
       const img = ref.current
       const result = colorThief.getColor(img, 25)
-      const hex = rgbToHexWithOpacity(result[0], result[1], result[2])
-      setDominantColor(hex)
+      const hex = rgbToHex(result[0], result[1], result[2])
+      const darkerHex = tinycolor(hex).darken(30).toHexString()
+      setDominantColor(darkerHex)
       if (isDefault) {
-        setDefaultStartColor(hex)
+        setDefaultStartColor(darkerHex)
       }
     } catch (error) {
       console.log(error)

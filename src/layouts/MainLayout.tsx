@@ -1,14 +1,13 @@
 import Sidebar from '~/components/sidebar'
-import { Outlet } from 'react-router-dom'
+import { Navigate, Outlet } from 'react-router-dom'
 import Header from '~/components/header'
 import useResize from '~/hooks/useResize'
 import { useSpotifyStore } from '~/store/spotify'
-import { Login } from '~/components/user'
 import useAuth from '~/hooks/useAuth'
+import { Suspense } from 'react'
 
 export default function MainLayout() {
   const accessToken = useSpotifyStore((state) => state.accessToken)
-  // const spotifyApi = useSpotifyStore((state) => state.spotifyApi)
   const { width, stopResize, startResize, onResize } = useResize()
   useAuth()
 
@@ -34,12 +33,14 @@ export default function MainLayout() {
           </div>
 
           <div className='relative flex-1 flex-shrink bg-s-black-3'>
-            <Header />
+            <Suspense fallback={<div className='h-16 bg-black' />}>
+              <Header />
+            </Suspense>
             <Outlet />
           </div>
         </div>
       ) : (
-        <Login />
+        <Navigate to='/login' />
       )}
     </>
   )

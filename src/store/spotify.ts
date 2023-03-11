@@ -42,7 +42,8 @@ export const useSpotifyStore = create<State & Actions>()(
             ...currentState,
             ...(persistedState as State),
             spotifyApi: new SpotifyWebApi({
-              ...(persistedState as State)?.spotifyApi?._credentials
+              ...(persistedState as State)?.spotifyApi?._credentials,
+              clientId: import.meta.env.VITE_CLIENT_ID
             })
           }
         },

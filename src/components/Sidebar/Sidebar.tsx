@@ -1,9 +1,9 @@
 import Divider from '~/components/common/Divider'
 import IconButton from '~/components/common/IconButton'
 import Icons from '~/components/common/Icons'
-import { Link } from 'react-router-dom'
 import Logo from './Logo'
 import Playlist from './Playlist'
+import { CustomLink } from '~/components/common'
 
 interface Props {
   width: number
@@ -17,13 +17,13 @@ export default function Sidebar({ width = 384 }: Props) {
     >
       <Logo />
       <div className='mt-4 px-2'>
-        <IconButton className='px-4' as={Link} to='/' isSelected icon={<Icons type='home' isSelected />}>
+        <IconButton className='px-4' as={CustomLink} to='/' iconType='home'>
           Home
         </IconButton>
-        <IconButton className='px-4' as={Link} to='/' icon={<Icons type='search' />}>
+        <IconButton className='px-4' as={CustomLink} to='/search' iconType='search'>
           Search
         </IconButton>
-        <IconButton className='px-4' as={Link} to='/' icon={<Icons type='library' />}>
+        <IconButton className='px-4' as={CustomLink} to='/collection/playlists' iconType='library'>
           Your Library
         </IconButton>
       </div>
@@ -42,8 +42,8 @@ export default function Sidebar({ width = 384 }: Props) {
         </IconButton>
         <IconButton
           className='px-6'
-          as={Link}
-          to='/'
+          as={CustomLink}
+          to='/collection/tracks'
           icon={
             <div className='liked-gradient flex h-6 w-6 flex-shrink-0 rounded-sm brightness-75 transition duration-300 group-hover:brightness-100'>
               <Icons className='m-auto' isSelected type='heart' />

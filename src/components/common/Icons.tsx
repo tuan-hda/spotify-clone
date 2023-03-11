@@ -75,7 +75,7 @@ const fillIcons = {
 
 export interface IconsProps {
   type: keyof typeof icons
-  isSelected?: boolean
+  isSelected?: boolean | null
   className?: string
 }
 
