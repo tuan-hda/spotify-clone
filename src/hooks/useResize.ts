@@ -1,14 +1,26 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-const MAX_WIDTH = 384
-const MIN_WIDTH = 150
-
-const useResize = () => {
+const useResize = (minWidth: number, maxWidth: number, initialWidth?: number, offsetLeft = 0) => {
   const [drag, setDrag] = useState({
     active: false,
     x: 0
   })
-  const [width, setWidth] = useState<number>(Number(localStorage.getItem('sidebar-width')) || MAX_WIDTH)
+  const [width, setWidth] = useState<number>(initialWidth || maxWidth)
+
+  useEffect(() => {
+    if (offsetLeft) {
+      setDrag((prev) => ({
+        ...prev,
+        x: offsetLeft
+      }))
+    }
+  }, [offsetLeft])
+
+  useEffect(() => {
+    if (initialWidth) {
+      setWidth(initialWidth)
+    }
+  }, [initialWidth])
 
   const startResize = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setDrag(() => ({
@@ -21,12 +33,12 @@ const useResize = () => {
     const { active, x } = drag
     if (active) {
       let newW = width + e.clientX - x
-      if (newW > MAX_WIDTH) {
-        newW = MAX_WIDTH
-        setDrag({ ...drag, x: MAX_WIDTH })
-      } else if (newW < MIN_WIDTH) {
-        newW = MIN_WIDTH
-        setDrag({ ...drag, x: MIN_WIDTH })
+      if (newW > maxWidth) {
+        newW = maxWidth
+        setDrag({ ...drag, x: offsetLeft + maxWidth })
+      } else if (newW < minWidth) {
+        newW = minWidth
+        setDrag({ ...drag, x: offsetLeft + minWidth })
       } else {
         setDrag({ ...drag, x: e.clientX })
       }
@@ -39,7 +51,7 @@ const useResize = () => {
     setDrag({ ...drag, active: false })
   }
 
-  return { width, startResize, onResize, stopResize }
+  return { width, setWidth, startResize, onResize, stopResize, active: drag.active }
 }
 
 export default useResize

@@ -30,7 +30,10 @@ const Header = () => {
   }, [opacity, dashboardStartColor, defaultStartColor]) as React.CSSProperties
 
   return (
-    <header className='pointer-events-none sticky z-[1] flex w-auto flex-1 gap-4 py-4 px-4 lg:px-8' style={style}>
+    <header
+      className='pointer-events-none sticky z-[1] flex w-auto flex-1 gap-4 py-4 px-4 transition duration-700 lg:px-8'
+      style={style}
+    >
       <HistoryButton type='back' />
       <HistoryButton type='forward' />
 

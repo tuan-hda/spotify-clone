@@ -6,15 +6,13 @@ import Playlist from './Playlist'
 import { CustomLink } from '~/components/common'
 
 interface Props {
-  width: number
+  width?: number
+  maxWidth?: number
 }
 
-export default function Sidebar({ width = 384 }: Props) {
+export default function Sidebar({ width = 393, maxWidth = 393 }: Props) {
   return (
-    <nav
-      className='scrollbar-hidden h-screen max-w-[24rem] overflow-auto bg-black py-6 text-sm text-s-gray-1'
-      style={{ width }}
-    >
+    <nav className='scrollbar-hidden overflow-auto bg-black py-6 text-sm text-s-gray-1' style={{ width, maxWidth }}>
       <Logo />
       <div className='mt-4 px-2'>
         <IconButton className='px-4' as={CustomLink} to='/' iconType='home'>

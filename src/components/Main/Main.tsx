@@ -29,7 +29,7 @@ export default function Main() {
     <Scrollbars
       onScroll={handleScroll}
       ref={ref}
-      className='custom-scrollbar-container -top-16 h-screen'
+      className='custom-scrollbar-container -top-16'
       renderThumbVertical={({ ...props }) => (
         <div
           {...props}

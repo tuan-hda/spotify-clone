@@ -5,40 +5,52 @@ import useResize from '~/hooks/useResize'
 import { useSpotifyStore } from '~/store/spotify'
 import useAuth from '~/hooks/useAuth'
 import { Suspense } from 'react'
+import Player from '~/components/player'
+
+const MAX_WIDTH = 393
+const MIN_WIDTH = 150
 
 export default function MainLayout() {
   const accessToken = useSpotifyStore((state) => state.accessToken)
-  const { width, stopResize, startResize, onResize } = useResize()
+  const { width, stopResize, startResize, onResize } = useResize(
+    MIN_WIDTH,
+    MAX_WIDTH,
+    Number(localStorage.getItem('sidebar-width'))
+  )
   useAuth()
 
   return (
     <>
       {accessToken ? (
-        <div
-          role='presentation'
-          className='relative flex h-screen text-sm text-white'
-          onMouseUp={stopResize}
-          onMouseMove={onResize}
-        >
-          <Sidebar width={width} />
+        <main className='flex h-screen flex-col overflow-hidden'>
           <div
             role='presentation'
-            className='group absolute top-0 z-[2] flex h-screen w-2 cursor-e-resize'
-            style={{
-              left: width - 4
-            }}
-            onMouseDown={startResize}
+            className='relative flex flex-1 text-sm text-white'
+            onMouseUp={stopResize}
+            onMouseMove={onResize}
           >
-            <div className='m-auto h-full border-[#4C4C4C] group-hover:border-r' />
+            <Sidebar width={width} maxWidth={MAX_WIDTH} />
+            <div
+              role='presentation'
+              className='group absolute top-0 z-[2] flex h-full w-2 cursor-e-resize'
+              style={{
+                left: width - 4
+              }}
+              onMouseDown={startResize}
+            >
+              <div className='m-auto h-full border-[#4C4C4C] group-hover:border-r' />
+            </div>
+
+            <div className='relative flex-1 flex-shrink bg-s-black-3'>
+              <Suspense fallback={<div className='h-16 bg-black' />}>
+                <Header />
+              </Suspense>
+              <Outlet />
+            </div>
           </div>
 
-          <div className='relative flex-1 flex-shrink bg-s-black-3'>
-            <Suspense fallback={<div className='h-16 bg-black' />}>
-              <Header />
-            </Suspense>
-            <Outlet />
-          </div>
-        </div>
+          {accessToken ? <Player accessToken={accessToken} /> : <div className='h-[90px] bg-s-black-5' />}
+        </main>
       ) : (
         <Navigate to='/login' />
       )}
