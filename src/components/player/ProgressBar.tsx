@@ -33,7 +33,7 @@ const ProgressBar = ({
 
   const progress = Math.round((100 * width) / maxWidth)
 
-  const skip: React.MouseEventHandler<HTMLDivElement> = (e) => {
+  const skip: React.MouseEventHandler<HTMLDivElement> = async (e) => {
     setWidth(e.clientX - offsetLeft)
   }
 

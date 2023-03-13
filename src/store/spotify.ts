@@ -14,10 +14,16 @@ interface CredentialsSpotify extends SpotifyWebApi {
 interface State {
   accessToken: string
   spotifyApi: CredentialsSpotify
+  spotifyPlayer: Spotify.Player | null
+  deviceId: string
+  playbackState: Spotify.PlaybackState | null
 }
 
 interface Actions {
   setAccessToken: (accessToken: string) => void
+  setSpotifyPlayer: (player: Spotify.Player) => void
+  setDeviceId: (deviceId: string) => void
+  setPlaybackState: (playbackState: Spotify.PlaybackState) => void
 }
 
 export const useSpotifyStore = create<State & Actions>()(
@@ -28,15 +34,35 @@ export const useSpotifyStore = create<State & Actions>()(
         spotifyApi: new SpotifyWebApi({
           clientId: import.meta.env.VITE_CLIENT_ID
         }),
+        spotifyPlayer: null,
+        deviceId: '',
+        playbackState: null,
+
         setAccessToken: (accessToken) => {
           set((state) => {
             state.accessToken = accessToken
             state.spotifyApi.setAccessToken(accessToken)
           })
+        },
+        setSpotifyPlayer: (player) => {
+          set((state) => {
+            state.spotifyPlayer = player
+          })
+        },
+        setDeviceId: (deviceId) => {
+          set((state) => {
+            state.deviceId = deviceId
+          })
+        },
+        setPlaybackState: (playbackState) => {
+          set((state) => {
+            state.playbackState = playbackState
+          })
         }
       }),
       {
         name: 'spotify-store',
+        partialize: (state) => ({ accessToken: state.accessToken, spotifyApi: state.spotifyApi }),
         merge: (persistedState: unknown, currentState) => {
           return {
             ...currentState,

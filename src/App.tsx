@@ -5,11 +5,14 @@ import { getNewAccessToken } from './api/spotify.api'
 import { useSpotifyStore } from './store/spotify'
 import { SWRDevTools } from 'swr-devtools'
 import routes from './config/routes'
+import usePlayer from './hooks/usePlayer'
 
 const router = createBrowserRouter(createRoutesFromElements(routes))
 
 export default function App() {
   const setAccessToken = useSpotifyStore((state) => state.setAccessToken)
+
+  usePlayer()
 
   const refreshToken = useCallback(async () => {
     try {

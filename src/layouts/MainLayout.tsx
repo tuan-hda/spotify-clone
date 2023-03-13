@@ -49,7 +49,7 @@ export default function MainLayout() {
             </div>
           </div>
 
-          {accessToken ? <Player accessToken={accessToken} /> : <div className='h-[90px] bg-s-black-5' />}
+          {accessToken ? <Player /> : <div className='h-[90px] bg-s-black-5' />}
         </main>
       ) : (
         <Navigate to='/login' />

@@ -43,7 +43,6 @@ const useResize = (minWidth: number, maxWidth: number, initialWidth?: number, of
         setDrag({ ...drag, x: e.clientX })
       }
       setWidth(newW)
-      localStorage.setItem('sidebar-width', String(newW))
     }
   }
 
