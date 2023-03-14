@@ -4,20 +4,36 @@ import Header from '~/components/header'
 import useResize from '~/hooks/useResize'
 import { useSpotifyStore } from '~/store/spotify'
 import useAuth from '~/hooks/useAuth'
-import { Suspense } from 'react'
+import { Suspense, useEffect } from 'react'
 import Player from '~/components/player'
+import { shallow } from 'zustand/shallow'
 
 const MAX_WIDTH = 393
 const MIN_WIDTH = 150
 
 export default function MainLayout() {
-  const accessToken = useSpotifyStore((state) => state.accessToken)
+  const [accessToken, spotifyPlayer] = useSpotifyStore((state) => [state.accessToken, state.spotifyPlayer], shallow)
   const { width, stopResize, startResize, onResize } = useResize(
     MIN_WIDTH,
     MAX_WIDTH,
     Number(localStorage.getItem('sidebar-width'))
   )
   useAuth()
+
+  useEffect(() => {
+    const onKeyDown: (this: Document, ev: KeyboardEvent) => void = (e) => {
+      if (e.key === ' ') {
+        e.preventDefault()
+        spotifyPlayer?.togglePlay()
+      }
+    }
+
+    document.addEventListener('keydown', onKeyDown)
+
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+    }
+  }, [spotifyPlayer])
 
   return (
     <>

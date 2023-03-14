@@ -20,6 +20,7 @@ const usePlayer = () => {
       setPlayer(player)
 
       player.addListener('player_state_changed', (state) => {
+        console.log(state)
         setPlaybackState(state)
       })
 

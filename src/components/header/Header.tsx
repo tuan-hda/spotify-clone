@@ -4,12 +4,12 @@ import HistoryButton from './HistoryButton'
 import { useMemo } from 'react'
 import { useScrollPosition } from '~/store/scrollPosition'
 import useSWR from 'swr'
-import { Tooltip } from 'flowbite-react'
 import LazyLoad from 'react-lazyload'
 import useStyleStore from '~/store/style'
 import { shallow } from 'zustand/shallow'
 import { hexWithOpacityToRgba } from '~/utils/utils'
 import DefaultAvatar from '~/assets/img/default_avatar.png'
+import { CustomTooltip } from '../common'
 
 const OPAQUE_POINT = 280
 
@@ -39,12 +39,7 @@ const Header = () => {
 
         <div className='m-auto' />
 
-        <Tooltip
-          content={user?.body.display_name}
-          trigger='hover'
-          arrow={false}
-          className='tooltip-shadow rounded-md bg-s-gray-2 px-[7px] py-[6px]'
-        >
+        <CustomTooltip content={user?.body.display_name}>
           <button className='pointer-events-auto ml-auto flex h-8 w-fit items-center gap-[6px] rounded-full bg-[#0D1118] hover:bg-s-gray-2 lg:w-[180px]'>
             <LazyLoad className='h-full flex-shrink-0 p-0.5'>
               <img
@@ -58,7 +53,7 @@ const Header = () => {
             </span>
             <AiFillCaretDown className='ml-auto mr-1 hidden w-6 text-white lg:inline' />
           </button>
-        </Tooltip>
+        </CustomTooltip>
       </header>
     </div>
   )

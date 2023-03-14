@@ -5,4 +5,8 @@ const https = axios.create({
   withCredentials: true
 })
 
+export const spotify = axios.create({
+  baseURL: 'https://api.spotify.com/v1'
+})
+
 export default https

@@ -49,10 +49,6 @@ export const convertMsToTime = (ms: number) => {
   return minutes + ':' + seconds
 }
 
-export const convertToWidth = (pos = 0, duration = 1, maxWidth = 1) => {
-  return (pos / duration) * maxWidth
-}
-
-export const convertToMs = (width = 0, maxWidth = 1, duration = 1) => {
-  return (width / maxWidth) * duration
+export const convertToC = (a = 0, b = 1, d = 1) => {
+  return (a / b) * d
 }
