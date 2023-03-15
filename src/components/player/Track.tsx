@@ -5,7 +5,7 @@ import { shallow } from 'zustand/shallow'
 import { CustomLink } from '../common'
 import { extractId } from '~/utils/utils'
 import { Fragment } from 'react'
-import LazyLoad from 'react-lazyload'
+import LazyLoad from 'react-lazy-load'
 
 const Track = () => {
   const [playbackState, spotifyApi] = useSpotifyStore((state) => [state.playbackState, state.spotifyApi], shallow)
@@ -28,7 +28,7 @@ const Track = () => {
 
       <div>
         <CustomLink
-          to={`/album/${extractId(track.album.uri)}`}
+          to={`/album/${track.id}`}
           className='overflow-hidden text-ellipsis whitespace-nowrap text-sm text-white hover:underline'
         >
           {track.name}

@@ -43,17 +43,11 @@ const HistoryButton = ({ type = 'back' }: Props) => {
         onClick={handleClick}
         disabled={!isEnabled()}
         className={classNames(
-          'pointer-events-auto flex h-8 w-8 items-center justify-center rounded-full',
-          isEnabled() ? 'bg-s-black-2' : 'bg-s-blue-1'
+          'pointer-events-auto flex h-8 w-8 items-center justify-center rounded-full bg-s-black-6',
+          !isEnabled() ? 'cursor-not-allowed opacity-60' : 'opacity-90'
         )}
       >
-        <Icon
-          className={classNames(
-            'h-5 w-5',
-            isEnabled() ? 'text-white' : 'text-s-gray-1',
-            type === 'back' ? 'mr-0.5' : 'ml-0.5'
-          )}
-        />
+        <Icon className={classNames('h-5 w-5 text-white', type === 'back' ? 'mr-[3px]' : 'ml-0.5')} />
       </button>
       <div
         id={`tooltip-user-${type}`}

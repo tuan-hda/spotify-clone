@@ -1,8 +1,16 @@
 import { useEffect, useState } from 'react'
+import { assertIsNode } from '~/utils/utils'
 
-const useResize = (minWidth: number, maxWidth: number, initialWidth?: number, offsetLeft = 0) => {
+const useResize = (
+  minWidth: number,
+  maxWidth: number,
+  initialWidth?: number,
+  offsetLeft = 0,
+  ref?: HTMLDivElement | null
+) => {
   const [drag, setDrag] = useState({
     active: false,
+    moved: false,
     x: 0
   })
   const [width, setWidth] = useState<number>(initialWidth || maxWidth)
@@ -24,6 +32,7 @@ const useResize = (minWidth: number, maxWidth: number, initialWidth?: number, of
 
   const startResize = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setDrag(() => ({
+      moved: false,
       active: true,
       x: e.clientX
     }))
@@ -32,22 +41,36 @@ const useResize = (minWidth: number, maxWidth: number, initialWidth?: number, of
   const onResize = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const { active, x } = drag
     if (active) {
+      if (!drag.moved) {
+        setDrag((state) => ({
+          ...state,
+          moved: true
+        }))
+      }
       let newW = width + e.clientX - x
       if (newW > maxWidth) {
         newW = maxWidth
-        setDrag({ ...drag, x: offsetLeft + maxWidth })
+        setDrag((state) => ({ ...state, x: offsetLeft + maxWidth }))
       } else if (newW < minWidth) {
         newW = minWidth
-        setDrag({ ...drag, x: offsetLeft + minWidth })
+        setDrag((state) => ({ ...state, x: offsetLeft + minWidth }))
       } else {
-        setDrag({ ...drag, x: e.clientX })
+        setDrag((state) => ({ ...state, x: e.clientX }))
       }
       setWidth(newW)
     }
   }
 
-  const stopResize = () => {
-    setDrag({ ...drag, active: false })
+  const stopResize = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    setDrag({ ...drag, active: false, moved: false })
+    if (drag.moved) return true
+    try {
+      assertIsNode(e.target)
+      if (ref?.contains(e.target)) return true
+    } catch (error) {
+      console.log(error)
+    }
+    return false
   }
 
   return { width, setWidth, startResize, onResize, stopResize, active: drag.active }

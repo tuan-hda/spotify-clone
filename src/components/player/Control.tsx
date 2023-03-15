@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { ReactComponent as Shuffle } from '~/assets/icons/Shuffle.svg'
+import { ReactComponent as Repeat } from '~/assets/icons/Repeat.svg'
+import { ReactComponent as RepeatOne } from '~/assets/icons/RepeatOne.svg'
 import Previous from '~/assets/icons/Previous.png'
 import Next from '~/assets/icons/Next.png'
 import Play from '~/assets/icons/Play.png'
 import Pause from '~/assets/icons/Pause.png'
-import Repeat from '~/assets/icons/Repeat.png'
 import { useResize } from '~/hooks'
 import Button from './Button'
 import ProgressBar from './ProgressBar'
@@ -15,6 +16,8 @@ import { convertMsToTime, convertToC } from '~/utils/utils'
 import useImmutableSWR from 'swr/immutable'
 import classNames from 'classnames'
 import { CustomTooltip } from '../common'
+
+const Dot = () => <div className='absolute bottom-0 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-s-green-5' />
 
 const Control = () => {
   const [ref, setRef] = useState<HTMLDivElement | null>(null)
@@ -28,7 +31,7 @@ const Control = () => {
   const maxWidth = ref?.offsetWidth || 1
   const offsetLeft = ref?.offsetLeft || 0
 
-  const { width, setWidth, active, startResize, onResize, stopResize } = useResize(0, maxWidth, 0, offsetLeft)
+  const { width, setWidth, active, startResize, onResize, stopResize } = useResize(0, maxWidth, 0, offsetLeft, ref)
 
   const togglePlay = async () => {
     loadPlayer(true, spotifyApi, accessToken)
@@ -53,9 +56,8 @@ const Control = () => {
   const pos = convertMsToTime(convertToC(width, maxWidth, playbackState?.duration))
   const duration = convertMsToTime(playbackState?.duration || data?.body.items.at(0)?.track.duration_ms || 0)
 
-  const onStopResize = async () => {
-    await spotifyPlayer?.seek(convertToC(width, maxWidth, playbackState?.duration))
-    stopResize()
+  const onStopResize = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (stopResize(e)) await spotifyPlayer?.seek(convertToC(width, maxWidth, playbackState?.duration))
   }
 
   const repeat = () => {
@@ -68,6 +70,12 @@ const Control = () => {
     }
   }
 
+  const getRepeatTooltipMsg = () => {
+    if (playbackState?.repeat_mode === 0 && playbackState.context.uri) return 'Enable repeat'
+    if (playbackState?.repeat_mode === 0 || playbackState?.repeat_mode === 1) return 'Enable repeat one'
+    return 'Disable repeat'
+  }
+
   return (
     <div
       className='col-span-4 flex h-full flex-1 flex-col justify-center gap-2'
@@ -78,15 +86,10 @@ const Control = () => {
       {/* Control Bar */}
       <div className='mx-auto flex select-none gap-2'>
         <CustomTooltip content={playbackState?.shuffle ? 'Disable shuffle' : 'Enable shuffle'}>
-          <button
-            className='relative flex h-8 w-8 cursor-auto p-1 brightness-[0.7] hover:brightness-100'
-            onClick={() => spotifyApi.setShuffle(!playbackState?.shuffle)}
-          >
-            <Shuffle className={classNames('-mt-1', playbackState?.shuffle ? 'fill-s-green-5' : 'fill-white')} />
-            {playbackState?.shuffle && (
-              <div className='absolute bottom-0 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-s-green-5'></div>
-            )}
-          </button>
+          <Button padding='4px' onClick={() => spotifyApi.setShuffle(!playbackState?.shuffle)}>
+            <Shuffle className={classNames(playbackState?.shuffle ? 'fill-s-green-5' : 'fill-white')} />
+            {playbackState?.shuffle && <Dot />}
+          </Button>
         </CustomTooltip>
         <CustomTooltip content='Previous track'>
           <Button src={Previous} onClick={() => spotifyPlayer?.previousTrack()} className='h-[14px] w-[14px]' />
@@ -97,11 +100,16 @@ const Control = () => {
         <CustomTooltip content='Next track'>
           <Button src={Next} onClick={() => spotifyPlayer?.nextTrack()} className='h-[14px] w-[14px]' />
         </CustomTooltip>
-        <CustomTooltip content='Enable repeat'>
-          <div className='relative'>
-            <Button src={Repeat} onClick={repeat} />
-            <div className='absolute bottom-0 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-s-green-5' />
-          </div>
+        <CustomTooltip content={getRepeatTooltipMsg()}>
+          <Button padding='8px' onClick={repeat}>
+            {playbackState?.repeat_mode === 2 ? (
+              <RepeatOne className='fill-s-green-5' />
+            ) : (
+              <Repeat className={classNames('-mt-1', playbackState?.repeat_mode ? 'fill-s-green-5' : 'fill-white')} />
+            )}
+            {playbackState?.repeat_mode === 1 && <Dot />}
+            {playbackState?.repeat_mode === 2 && <Dot />}
+          </Button>
         </CustomTooltip>
       </div>
 

@@ -4,12 +4,13 @@ import HistoryButton from './HistoryButton'
 import { useMemo } from 'react'
 import { useScrollPosition } from '~/store/scrollPosition'
 import useSWR from 'swr'
-import LazyLoad from 'react-lazyload'
+import LazyLoad from 'react-lazy-load'
 import useStyleStore from '~/store/style'
 import { shallow } from 'zustand/shallow'
 import { hexWithOpacityToRgba } from '~/utils/utils'
 import DefaultAvatar from '~/assets/img/default_avatar.png'
 import { CustomTooltip } from '../common'
+import { useLocation } from 'react-router-dom'
 
 const OPAQUE_POINT = 280
 
@@ -19,16 +20,19 @@ const Header = () => {
     (state) => [state.dashboardStartColor, state.defaultStartColor],
     shallow
   )
-  const { data: user } = useSWR('/get-me', async () => spotifyApi.getMe(), { suspense: true })
+  const { data: user } = useSWR('/get-me', async () => spotifyApi.getMe())
+  const location = useLocation()
+
   const top = useScrollPosition((state) => state.top)
   const opacity = useMemo(() => Math.min(top / OPAQUE_POINT, 1), [top])
 
   const style = useMemo(() => {
     return {
-      backgroundColor: hexWithOpacityToRgba(dashboardStartColor || defaultStartColor),
+      backgroundColor:
+        location.pathname !== '/' ? '#0b0b0b' : hexWithOpacityToRgba(dashboardStartColor || defaultStartColor),
       opacity
     }
-  }, [opacity, dashboardStartColor, defaultStartColor]) as React.CSSProperties
+  }, [opacity, dashboardStartColor, defaultStartColor, location]) as React.CSSProperties
 
   return (
     <div className='sticky z-[1]'>
@@ -40,7 +44,7 @@ const Header = () => {
         <div className='m-auto' />
 
         <CustomTooltip content={user?.body.display_name}>
-          <button className='pointer-events-auto ml-auto flex h-8 w-fit items-center gap-[6px] rounded-full bg-[#0D1118] hover:bg-s-gray-2 lg:w-[180px]'>
+          <button className='pointer-events-auto ml-auto flex h-8 w-fit items-center gap-[6px] rounded-full bg-black bg-opacity-90 hover:bg-s-gray-2 lg:w-[180px]'>
             <LazyLoad className='h-full flex-shrink-0 p-0.5'>
               <img
                 src={user?.body?.images?.at(0)?.url || DefaultAvatar}

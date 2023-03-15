@@ -3,7 +3,6 @@ import { Suspense, useCallback } from 'react'
 import { SWRConfig } from 'swr'
 import { getNewAccessToken } from './api/spotify.api'
 import { useSpotifyStore } from './store/spotify'
-import { SWRDevTools } from 'swr-devtools'
 import routes from './config/routes'
 import usePlayer from './hooks/usePlayer'
 
@@ -24,23 +23,21 @@ export default function App() {
   }, [setAccessToken])
 
   return (
-    <SWRDevTools>
-      <SWRConfig
-        value={{
-          suspense: true,
-          onErrorRetry: async (error, _, __, revalidate, { retryCount }) => {
-            if (!String(error).includes('The access token expired')) return
-            if (retryCount >= 3) return
+    <SWRConfig
+      value={{
+        suspense: true,
+        onErrorRetry: async (error, _, __, revalidate, { retryCount }) => {
+          if (!String(error).includes('The access token expired')) return
+          if (retryCount >= 3) return
 
-            await refreshToken()
-            revalidate({ retryCount })
-          }
-        }}
-      >
-        <Suspense fallback={<div className='h-screen w-screen bg-black' />}>
-          <RouterProvider router={router} />
-        </Suspense>
-      </SWRConfig>
-    </SWRDevTools>
+          await refreshToken()
+          revalidate({ retryCount })
+        }
+      }}
+    >
+      <Suspense fallback={<div className='h-screen w-screen bg-black'></div>}>
+        <RouterProvider router={router} />
+      </Suspense>
+    </SWRConfig>
   )
 }

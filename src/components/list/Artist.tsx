@@ -1,11 +1,11 @@
-import { BsFillPlayFill } from 'react-icons/bs'
 import useStyleStore from '~/store/style'
 import { useCallback, useRef, useState } from 'react'
 import ColorThief from 'colorthief'
 import { rgbToHex } from '~/utils/utils'
-import LazyLoad from 'react-lazyload'
+import LazyLoad from 'react-lazy-load'
 import { shallow } from 'zustand/shallow'
 import tinycolor from 'tinycolor2'
+import PlayButton from '../common/PlayButton'
 
 interface Props extends SpotifyApi.SingleArtistResponse {
   isDefault?: boolean
@@ -62,9 +62,7 @@ const Artist = ({ images, name, isDefault = false }: Props) => {
       </LazyLoad>
       <p className='text-base font-bold'>{name}</p>
 
-      <button className='ml-auto mr-4 flex h-12 w-12 rounded-full bg-s-green-1 opacity-0 shadow-lg shadow-black/40 transition-opacity duration-300 hover:scale-105 group-hover:opacity-100'>
-        <BsFillPlayFill className='my-auto ml-[11px] h-7 w-7 text-black' />
-      </button>
+      <PlayButton className='ml-auto mr-4' />
     </div>
   )
 }

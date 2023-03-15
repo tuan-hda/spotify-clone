@@ -58,6 +58,20 @@
     background: linear-gradient(var(--start-color), #121212);
     transition: --start-color 0.8s;
   }
+
+  .ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .second-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
 }
 
 @font-face {
@@ -99,6 +113,10 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+html {
+  height: 100%;
 }
 
 h1,

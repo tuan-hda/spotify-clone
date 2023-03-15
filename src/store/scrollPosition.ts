@@ -14,7 +14,9 @@ export const useScrollPosition = create<State & Actions>()(
   immer((set) => ({
     top: 0,
     setTop: (top) => {
-      set(() => ({ top }))
+      set((state) => {
+        state.top = top
+      })
     }
   }))
 )

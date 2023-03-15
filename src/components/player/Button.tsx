@@ -1,14 +1,28 @@
 import classNames from 'classnames'
 
-interface ButtonProps {
-  src: string
+type ButtonProps = {
+  src?: string
   className?: string
+  padding?: string
 }
 
-const Button = ({ src, className = 'h-[15px] w-4', ...props }: JSX.IntrinsicElements['button'] & ButtonProps) => {
+const Button = ({
+  src,
+  children,
+  className = 'h-[15px] w-4',
+  padding,
+  ...props
+}: JSX.IntrinsicElements['button'] & ButtonProps) => {
   return (
-    <button {...props} className='flex h-8 w-8 cursor-auto p-2 brightness-[0.7] hover:brightness-100'>
-      <img src={src} alt='Shuffle' className={classNames('m-auto', className)} />
+    <button
+      {...props}
+      className='flex h-8 w-8 cursor-auto items-center justify-center p-2 brightness-[0.7] hover:brightness-100'
+      style={{
+        padding
+      }}
+    >
+      {src && <img src={src} alt='Shuffle' className={classNames('m-auto', className)} />}
+      {!src && children}
     </button>
   )
 }

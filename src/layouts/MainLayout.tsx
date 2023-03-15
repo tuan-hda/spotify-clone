@@ -1,24 +1,37 @@
 import Sidebar from '~/components/sidebar'
-import { Navigate, Outlet } from 'react-router-dom'
+import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import Header from '~/components/header'
 import useResize from '~/hooks/useResize'
 import { useSpotifyStore } from '~/store/spotify'
 import useAuth from '~/hooks/useAuth'
-import { Suspense, useEffect } from 'react'
+import { Suspense, useCallback, useEffect, useRef } from 'react'
 import Player from '~/components/player'
 import { shallow } from 'zustand/shallow'
+import Scrollbars from 'react-custom-scrollbars'
+import { useScrollPosition } from '~/store/scrollPosition'
+import getFallback from '~/utils/getFallback'
 
 const MAX_WIDTH = 393
 const MIN_WIDTH = 150
 
 export default function MainLayout() {
   const [accessToken, spotifyPlayer] = useSpotifyStore((state) => [state.accessToken, state.spotifyPlayer], shallow)
+  const ref = useRef<Scrollbars>(null)
+  const setTop = useScrollPosition((state) => state.setTop)
+  const location = useLocation()
+
+  const Fallback = getFallback(location.pathname)
+
   const { width, stopResize, startResize, onResize } = useResize(
     MIN_WIDTH,
     MAX_WIDTH,
     Number(localStorage.getItem('sidebar-width'))
   )
   useAuth()
+
+  const handleScroll = useCallback(() => {
+    setTop(ref.current?.getScrollTop() || 0)
+  }, [setTop])
 
   useEffect(() => {
     const onKeyDown: (this: Document, ev: KeyboardEvent) => void = (e) => {
@@ -61,7 +74,25 @@ export default function MainLayout() {
               <Suspense fallback={<div className='h-16 bg-black' />}>
                 <Header />
               </Suspense>
-              <Outlet />
+
+              <Suspense fallback={<Fallback />}>
+                <Scrollbars
+                  onScroll={handleScroll}
+                  ref={ref}
+                  className='custom-scrollbar-container -top-16'
+                  renderThumbVertical={({ ...props }) => (
+                    <div
+                      {...props}
+                      className='custom-scrollbar bg-[#a6a6a6] bg-opacity-50 transition-opacity hover:bg-[#ffffff] hover:bg-opacity-50'
+                    />
+                  )}
+                >
+                  <Outlet />
+                  <div className='h-[200px] px-4 pt-16 lg:px-8'>
+                    <div className='border-t border-s-gray-9' />
+                  </div>
+                </Scrollbars>
+              </Suspense>
             </div>
           </div>
 
