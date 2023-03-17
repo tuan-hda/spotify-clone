@@ -1,5 +1,6 @@
 import classNames from 'classnames'
 import { useMatch, useResolvedPath } from 'react-router-dom'
+import { paths } from '~/config/routes'
 import Icons, { IconsProps } from './Icons'
 
 interface ButtonProps<T extends React.ElementType> {
@@ -29,10 +30,20 @@ export default function IconButton<T extends React.ElementType = 'button'>({
     path: resolved.pathname,
     end: true
   })
+  const searchMatch = useMatch({
+    path: paths.searchValue.path,
+    end: true
+  })
+
+  const checkIsSelected = () => {
+    if (to && match) return true
+    if (to.includes('/search') && searchMatch) return true
+    return false
+  }
 
   return (
     <Component {...props} to={to} className={classNames('group flex h-10 w-full items-center gap-4', className)}>
-      {iconType && <Icons type={iconType} isSelected={!!(to && match)} />}
+      {iconType && <Icons type={iconType} isSelected={checkIsSelected()} />}
       {icon}
       <p
         className={classNames(

@@ -69,17 +69,15 @@ const sectionRecord = (spotifyApi?: SpotifyWebApi): Record<keys, Section> => ({
   },
   'featured-playlists': {
     fetchFn: async () => {
-      let res: Response<CustomListOfFeaturedPlaylistsResponse> = {}
-      await spotifyApi?.getFeaturedPlaylists({}, (_, response) => {
-        res = {
-          ...response,
-          body: {
-            ...response.body,
-            items: response.body.playlists.items
-          }
+      if (!spotifyApi) return
+      const response = await spotifyApi?.getFeaturedPlaylists()
+      return {
+        ...response,
+        body: {
+          ...response.body,
+          items: response.body.playlists.items
         }
-      })
-      return res
+      }
     },
     mapFn: (_, item) => {
       if ('type' in item) return item

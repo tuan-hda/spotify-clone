@@ -20,6 +20,10 @@
     overflow-y: scroll;
   }
 
+  .custom-scrollbar {
+    transition: opacity 0.3s ease-in-out, background-color 0.3s ease-in-out;
+  }
+
   .custom-scrollbar-container .custom-scrollbar {
     opacity: 0;
     position: relative;
@@ -76,31 +80,31 @@
 
 @font-face {
   font-family: CircularSpotify;
-  src: url(./assets/fonts/CircularStd-Light.otf);
+  src: url(./assets/fonts/CircularSpotifyText-Light.otf);
   font-weight: 300;
 }
 
 @font-face {
   font-family: CircularSpotify;
-  src: url(./assets/fonts/CircularStd-Book.otf);
+  src: url(./assets/fonts/CircularSpotifyText-Book.otf);
   font-weight: 400;
 }
 
 @font-face {
   font-family: CircularSpotify;
-  src: url(./assets/fonts/CircularStd-Medium.otf);
+  src: url(./assets/fonts/CircularSpotifyText-Medium.otf);
   font-weight: 500;
 }
 
 @font-face {
   font-family: CircularSpotify;
-  src: url(./assets/fonts/CircularStd-Bold.otf);
+  src: url(./assets/fonts/CircularSpotifyText-Bold.otf);
   font-weight: 700;
 }
 
 @font-face {
   font-family: CircularSpotify;
-  src: url(./assets/fonts/CircularStd-Black.otf);
+  src: url(./assets/fonts/CircularSpotifyText-Black.otf);
   font-weight: 900;
 }
 

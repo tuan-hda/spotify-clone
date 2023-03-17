@@ -25,7 +25,10 @@ const Section = () => {
           {data?.body.items
             .map((item, index) => mapFn(data.body.items, item, index))
             .map((item) => {
-              if (item) return <ListItem key={item.id} item={item} artists={item.artists} />
+              if (item)
+                return (
+                  <ListItem key={item.id} item={item} artists={item.type !== 'playlist' ? item.artists : undefined} />
+                )
             })}
         </div>
       </div>

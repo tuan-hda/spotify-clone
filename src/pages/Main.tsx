@@ -36,6 +36,10 @@ export default function Main() {
       <div className='mt-9 px-4 lg:px-8'>
         <List swrKey='top-tracks' />
       </div>
+
+      <div className='mt-9 px-4 lg:px-8'>
+        <List swrKey='featured-playlists' />
+      </div>
     </>
   )
 }

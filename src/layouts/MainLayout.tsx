@@ -10,6 +10,7 @@ import { shallow } from 'zustand/shallow'
 import Scrollbars from 'react-custom-scrollbars'
 import { useScrollPosition } from '~/store/scrollPosition'
 import getFallback from '~/utils/getFallback'
+import useScrollTop from '~/hooks/useScrollTop'
 
 const MAX_WIDTH = 393
 const MIN_WIDTH = 150
@@ -19,6 +20,7 @@ export default function MainLayout() {
   const ref = useRef<Scrollbars>(null)
   const setTop = useScrollPosition((state) => state.setTop)
   const location = useLocation()
+  useScrollTop()
 
   const Fallback = getFallback(location.pathname)
 
@@ -83,7 +85,7 @@ export default function MainLayout() {
                   renderThumbVertical={({ ...props }) => (
                     <div
                       {...props}
-                      className='custom-scrollbar bg-[#a6a6a6] bg-opacity-50 transition-opacity hover:bg-[#ffffff] hover:bg-opacity-50'
+                      className='custom-scrollbar bg-[#a6a6a6] bg-opacity-50 hover:bg-[#ffffff] hover:bg-opacity-50'
                     />
                   )}
                 >

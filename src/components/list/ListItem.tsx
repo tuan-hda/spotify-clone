@@ -6,7 +6,11 @@ import { shallow } from 'zustand/shallow'
 import classNames from 'classnames'
 
 interface Props {
-  item: SpotifyApi.AlbumObjectSimplified | SpotifyApi.ArtistObjectFull | SpotifyApi.TrackObjectFull
+  item:
+    | SpotifyApi.AlbumObjectSimplified
+    | SpotifyApi.ArtistObjectFull
+    | SpotifyApi.TrackObjectFull
+    | SpotifyApi.PlaylistObjectSimplified
   artists?: SpotifyApi.ArtistObjectSimplified[]
   setRef?: (ref: HTMLDivElement | null) => void
   setMaxHeight?: (value: number) => void

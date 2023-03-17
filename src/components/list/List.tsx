@@ -54,7 +54,7 @@ const List = ({ swrKey }: Props) => {
                   <ListItem
                     key={item.id}
                     item={item}
-                    artists={item.artists}
+                    artists={item.type !== 'playlist' ? item.artists : undefined}
                     itemRef={ref}
                     setRef={index === 0 ? setRef : undefined}
                     setMaxHeight={index === 0 ? setMaxHeight : undefined}
