@@ -1,24 +1,23 @@
-import { useEffect, useState, Fragment } from 'react'
+import { useEffect, useState } from 'react'
 import useSWR from 'swr'
+import sectionMap, { isAlbumObjectSimplified } from '~/config/sectionMap'
+import { useSpotifyStore } from '~/store/spotify'
 import getTitle from '~/utils/getTitle'
 import { CustomLink } from '../common'
 import ListItem from './ListItem'
-
-interface Response<T> {
-  body: T
-  headers: Record<string, string>
-  statusCode: number
-}
+import { AlbumObjectSimplified } from '~/config/sectionMap'
 
 interface Props {
-  fn: () => Promise<Response<SpotifyApi.UsersRecentlyPlayedTracksResponse>>
-  swrKey: string
+  swrKey: keyof ReturnType<typeof sectionMap>
 }
 
-const List = ({ fn, swrKey }: Props) => {
+const List = ({ swrKey }: Props) => {
+  const spotifyApi = useSpotifyStore((state) => state.spotifyApi)
   const [ref, setRef] = useState<HTMLDivElement | null>(null)
   const [maxHeight, setMaxHeight] = useState(200)
-  const { data } = useSWR(swrKey, fn)
+  const { fetchFn, mapFn } = sectionMap(spotifyApi)[swrKey]
+  const { data } = useSWR(swrKey, fetchFn)
+  // console.log(data)
 
   useEffect(() => {
     const onResize = () => {
@@ -42,7 +41,7 @@ const List = ({ fn, swrKey }: Props) => {
         <CustomLink to='/' className='text-2xl font-bold tracking-tight hover:underline'>
           {getTitle(swrKey)}
         </CustomLink>
-        <CustomLink to={`/section/${swrKey}`} className='text-s-gray-8 hover:underline'>
+        <CustomLink to={`/section/${swrKey}`} className='font-bold text-s-gray-8 hover:underline'>
           Show all
         </CustomLink>
       </header>
@@ -52,18 +51,23 @@ const List = ({ fn, swrKey }: Props) => {
           maxHeight
         }}
       >
-        {data?.body.items.map((item, index) => (
-          <Fragment key={item.played_at}>
-            {!findAlbum(item.track.album.id, index) ? (
-              <ListItem
-                track={item.track}
-                itemRef={ref}
-                setRef={index === 0 ? setRef : undefined}
-                setMaxHeight={index === 0 ? setMaxHeight : undefined}
-              />
-            ) : null}
-          </Fragment>
-        ))}
+        {data?.body.items.map((item, index) => {
+          if (!findAlbum(item.track.album.id, index)) {
+            const sectionItem = mapFn(item)
+            if (isAlbumObjectSimplified(sectionItem)) {
+              return (
+                <ListItem
+                  key={sectionItem.id}
+                  item={sectionItem}
+                  artists={item.track.artists}
+                  itemRef={ref}
+                  setRef={index === 0 ? setRef : undefined}
+                  setMaxHeight={index === 0 ? setMaxHeight : undefined}
+                />
+              )
+            }
+          }
+        })}
       </div>
     </>
   )

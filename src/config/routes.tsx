@@ -1,24 +1,25 @@
 import { Route } from 'react-router-dom'
 import MainLayout from '~/layouts/MainLayout'
 import { Fragment, lazy } from 'react'
-import { MainSkeleton } from '~/components/skeleton'
+import { MainSkeleton, SectionSkeleton } from '~/components/skeleton'
 
-const Main = lazy(() => import('~/components/main'))
-const Login = lazy(() => import('~/components/user'))
-const Section = lazy(() => import('~/components/section'))
-
-const Temp = () => <div className='h-full flex-1 bg-black' />
+const Main = lazy(() => import('~/pages/Main'))
+const Login = lazy(() => import('~/pages/Login'))
+const Section = lazy(() => import('~/pages/Section'))
+const NotFound = lazy(() => import('~/pages/NotFound'))
+// const Album = lazy(() => import('~/pages/Album'))
 
 export const paths = {
-  root: { path: '/', fallback: MainSkeleton },
+  root: { path: '/', fallback: Fragment },
+  main: { path: '/', fallback: MainSkeleton },
   search: { path: '/', fallback: Fragment },
-  section: { path: '/section/:section', fallback: Temp },
+  section: { path: '/section/:section', fallback: SectionSkeleton },
   login: { path: '/login', fallback: Fragment }
 }
 
 const routes = (
-  <Route>
-    <Route path={paths.root.path} element={<MainLayout />}>
+  <Route errorElement={<NotFound />}>
+    <Route path={paths.main.path} element={<MainLayout />}>
       <Route index element={<Main />} />
       <Route path={paths.search.path} element={<Main />} />
       <Route path={paths.section.path} element={<Section />} />

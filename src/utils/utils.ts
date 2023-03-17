@@ -1,3 +1,5 @@
+import sectionMap from '~/config/sectionMap'
+
 export const getCodeFromUrl = () => {
   const code = new URLSearchParams(window.location.search).get('code')
 
@@ -57,4 +59,10 @@ export function assertIsNode(e: EventTarget | null): asserts e is Node {
   if (!e || !('nodeType' in e)) {
     throw new Error(`Node expected`)
   }
+}
+
+export function assertIsValidSection(
+  section: string | undefined
+): asserts section is keyof ReturnType<typeof sectionMap> {
+  if (!section || !(section in sectionMap())) throw new Error('Wrong section')
 }

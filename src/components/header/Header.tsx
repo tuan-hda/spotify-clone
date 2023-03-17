@@ -4,7 +4,6 @@ import HistoryButton from './HistoryButton'
 import { useMemo } from 'react'
 import { useScrollPosition } from '~/store/scrollPosition'
 import useSWR from 'swr'
-import LazyLoad from 'react-lazy-load'
 import useStyleStore from '~/store/style'
 import { shallow } from 'zustand/shallow'
 import { hexWithOpacityToRgba } from '~/utils/utils'
@@ -21,6 +20,8 @@ const Header = () => {
     shallow
   )
   const { data: user } = useSWR('/get-me', async () => spotifyApi.getMe())
+  const { data } = useSWR('/get-a', async () => spotifyApi.getMyTopArtists())
+  console.log(data)
   const location = useLocation()
 
   const top = useScrollPosition((state) => state.top)
@@ -45,13 +46,12 @@ const Header = () => {
 
         <CustomTooltip content={user?.body.display_name}>
           <button className='pointer-events-auto ml-auto flex h-8 w-fit items-center gap-[6px] rounded-full bg-black bg-opacity-90 hover:bg-s-gray-2 lg:w-[180px]'>
-            <LazyLoad className='h-full flex-shrink-0 p-0.5'>
-              <img
-                src={user?.body?.images?.at(0)?.url || DefaultAvatar}
-                alt='User Avatar'
-                className='h-full w-full rounded-full'
-              />
-            </LazyLoad>
+            <img
+              src={user?.body?.images?.at(0)?.url || DefaultAvatar}
+              alt='User Avatar'
+              loading='lazy'
+              className='aspect-square h-full flex-shrink-0 rounded-full p-0.5'
+            />
             <span className='hidden overflow-hidden text-ellipsis whitespace-nowrap font-bold lg:inline'>
               {user?.body?.display_name}
             </span>

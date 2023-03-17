@@ -10,7 +10,6 @@ import { useResize } from '~/hooks'
 import Button from './Button'
 import ProgressBar from './ProgressBar'
 import { useSpotifyStore } from '~/store/spotify'
-import loadPlayer from '~/utils/loadPlayer'
 import { shallow } from 'zustand/shallow'
 import { convertMsToTime, convertToC } from '~/utils/utils'
 import useImmutableSWR from 'swr/immutable'
@@ -21,21 +20,29 @@ const Dot = () => <div className='absolute bottom-0 left-1/2 h-1 w-1 -translate-
 
 const Control = () => {
   const [ref, setRef] = useState<HTMLDivElement | null>(null)
-  const [player, spotifyApi, accessToken, playbackState, spotifyPlayer] = useSpotifyStore(
-    (state) => [state.spotifyPlayer, state.spotifyApi, state.accessToken, state.playbackState, state.spotifyPlayer],
+  const [player, spotifyApi, playbackState, spotifyPlayer, device_id] = useSpotifyStore(
+    (state) => [state.spotifyPlayer, state.spotifyApi, state.playbackState, state.spotifyPlayer, state.deviceId],
     shallow
   )
   const { data } = useImmutableSWR('/get-immutable-last-track', async () =>
     spotifyApi.getMyRecentlyPlayedTracks({ limit: 1 })
   )
+
   const maxWidth = ref?.offsetWidth || 1
   const offsetLeft = ref?.offsetLeft || 0
 
   const { width, setWidth, active, startResize, onResize, stopResize } = useResize(0, maxWidth, 0, offsetLeft, ref)
 
   const togglePlay = async () => {
-    loadPlayer(true, spotifyApi, accessToken)
-    player?.togglePlay()
+    await spotifyPlayer?.activateElement()
+    if (!playbackState?.track_window.current_track && data?.body.items[0]) {
+      spotifyApi.play({
+        device_id,
+        uris: [data.body.items[0].track.uri]
+      })
+    } else {
+      player?.togglePlay()
+    }
   }
 
   useEffect(() => {
@@ -83,7 +90,7 @@ const Control = () => {
       onMouseUp={onStopResize}
       onMouseMove={onResize}
     >
-      {/* Control Bar */}
+      {/* Control Buttons */}
       <div className='mx-auto flex select-none gap-2'>
         <CustomTooltip content={playbackState?.shuffle ? 'Disable shuffle' : 'Enable shuffle'}>
           <Button padding='4px' onClick={() => spotifyApi.setShuffle(!playbackState?.shuffle)}>

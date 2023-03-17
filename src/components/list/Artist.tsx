@@ -2,7 +2,6 @@ import useStyleStore from '~/store/style'
 import { useCallback, useRef, useState } from 'react'
 import ColorThief from 'colorthief'
 import { rgbToHex } from '~/utils/utils'
-import LazyLoad from 'react-lazy-load'
 import { shallow } from 'zustand/shallow'
 import tinycolor from 'tinycolor2'
 import PlayButton from '../common/PlayButton'
@@ -49,17 +48,16 @@ const Artist = ({ images, name, isDefault = false }: Props) => {
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <LazyLoad>
-        <img
-          draggable={false}
-          crossOrigin='anonymous'
-          ref={ref}
-          src={images.at(0)?.url}
-          alt={name}
-          className='h-16 w-16 object-cover shadow-s-1 xl:h-20 xl:w-20'
-          onLoad={onLoad}
-        />
-      </LazyLoad>
+      <img
+        draggable={false}
+        crossOrigin='anonymous'
+        ref={ref}
+        src={images.at(0)?.url}
+        alt={name}
+        loading='lazy'
+        className='h-16 w-16 object-cover shadow-s-1 xl:h-20 xl:w-20'
+        onLoad={onLoad}
+      />
       <p className='text-base font-bold'>{name}</p>
 
       <PlayButton className='ml-auto mr-4' />

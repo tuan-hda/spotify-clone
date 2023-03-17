@@ -3,8 +3,8 @@ import { useEffect } from 'react'
 import { shallow } from 'zustand/shallow'
 
 const usePlayer = () => {
-  const [accessToken, setPlayer, setPlaybackState] = useSpotifyStore(
-    (state) => [state.accessToken, state.setSpotifyPlayer, state.setPlaybackState],
+  const [accessToken, setPlayer, setPlaybackState, setDeviceId] = useSpotifyStore(
+    (state) => [state.accessToken, state.setSpotifyPlayer, state.setPlaybackState, state.setDeviceId],
     shallow
   )
 
@@ -15,6 +15,10 @@ const usePlayer = () => {
         getOAuthToken: (cb) => {
           cb(accessToken)
         }
+      })
+
+      player.addListener('ready', ({ device_id }) => {
+        setDeviceId(device_id)
       })
 
       setPlayer(player)
@@ -28,7 +32,15 @@ const usePlayer = () => {
 
       return player
     }
-  }, [accessToken, setPlayer, setPlaybackState])
+
+    if (!document.querySelector('script[src="https://sdk.scdn.co/spotify-player.js"]')) {
+      const script = document.createElement('script')
+      script.src = 'https://sdk.scdn.co/spotify-player.js'
+      script.async = true
+
+      document.body.appendChild(script)
+    }
+  }, [accessToken, setPlayer, setPlaybackState, setDeviceId])
 }
 
 export default usePlayer

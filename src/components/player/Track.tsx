@@ -5,7 +5,6 @@ import { shallow } from 'zustand/shallow'
 import { CustomLink } from '../common'
 import { extractId } from '~/utils/utils'
 import { Fragment } from 'react'
-import LazyLoad from 'react-lazy-load'
 
 const Track = () => {
   const [playbackState, spotifyApi] = useSpotifyStore((state) => [state.playbackState, state.spotifyApi], shallow)
@@ -18,13 +17,12 @@ const Track = () => {
 
   return (
     <div className='col-span-3 flex h-14 items-center gap-[15px]'>
-      <LazyLoad className='h-full'>
-        <img
-          src={track.album.images.at(0)?.url}
-          className='aspect-square h-full flex-shrink-0 object-cover'
-          alt='Current Track'
-        />
-      </LazyLoad>
+      <img
+        src={track.album.images.at(0)?.url}
+        loading='lazy'
+        className='aspect-square h-full flex-shrink-0 object-cover'
+        alt='Current Track'
+      />
 
       <div>
         <CustomLink
