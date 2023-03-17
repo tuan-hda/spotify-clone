@@ -19,7 +19,7 @@ export default function Main() {
     <>
       <GradientBackground>
         <div className='h-16' />
-        <div className='px-4 py-6 lg:px-8'>
+        <div className='px-4 pt-6 lg:px-8'>
           <h1 className='text-3xl font-black tracking-tight'>Good {greeting}</h1>
           <ArtistList />
         </div>
@@ -29,8 +29,12 @@ export default function Main() {
         <List swrKey='recently-played' />
       </div>
 
-      <div className='mt-5 px-4 lg:px-8'>
-        <List swrKey='recently-played' />
+      <div className='mt-9 px-4 lg:px-8'>
+        <List swrKey='top-artists' />
+      </div>
+
+      <div className='mt-9 px-4 lg:px-8'>
+        <List swrKey='top-tracks' />
       </div>
     </>
   )

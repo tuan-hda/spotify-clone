@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { assertIsNode } from '~/utils/utils'
+import { assertIsNode } from '~/utils/guards'
 
 const useResize = (
   minWidth: number,
@@ -64,6 +64,7 @@ const useResize = (
   const stopResize = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setDrag({ ...drag, active: false, moved: false })
     if (drag.moved) return true
+    if (!e) return false
     try {
       assertIsNode(e.target)
       if (ref?.contains(e.target)) return true

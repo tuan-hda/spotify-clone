@@ -3,3 +3,7 @@ export interface Response<T> {
   headers: Record<string, string>
   statusCode: number
 }
+
+export interface CustomArtistObjectFull extends SpotifyApi.ArtistObjectFull {
+  artists?: SpotifyApi.ArtistObjectSimplified[]
+}

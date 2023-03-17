@@ -88,7 +88,7 @@ export default function MainLayout() {
                   )}
                 >
                   <Outlet />
-                  <div className='h-[200px] px-4 pt-16 lg:px-8'>
+                  <div className='h-[220px] px-4 pt-[88px] lg:px-8'>
                     <div className='border-t border-s-gray-9' />
                   </div>
                 </Scrollbars>

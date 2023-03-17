@@ -20,7 +20,7 @@ const Header = () => {
     shallow
   )
   const { data: user } = useSWR('/get-me', async () => spotifyApi.getMe())
-  const { data } = useSWR('/get-a', async () => spotifyApi.getMyTopArtists())
+  const { data } = useSWR('/get-sth', async () => spotifyApi.getFeaturedPlaylists())
   console.log(data)
   const location = useLocation()
 

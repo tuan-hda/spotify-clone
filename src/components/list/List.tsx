@@ -1,27 +1,25 @@
 import { useEffect, useState } from 'react'
 import useSWR from 'swr'
-import sectionMap, { isAlbumObjectSimplified } from '~/config/sectionMap'
+import sectionRecord from '~/config/sectionRecord'
 import { useSpotifyStore } from '~/store/spotify'
 import getTitle from '~/utils/getTitle'
 import { CustomLink } from '../common'
 import ListItem from './ListItem'
-import { AlbumObjectSimplified } from '~/config/sectionMap'
 
 interface Props {
-  swrKey: keyof ReturnType<typeof sectionMap>
+  swrKey: keyof ReturnType<typeof sectionRecord>
 }
 
 const List = ({ swrKey }: Props) => {
   const spotifyApi = useSpotifyStore((state) => state.spotifyApi)
   const [ref, setRef] = useState<HTMLDivElement | null>(null)
-  const [maxHeight, setMaxHeight] = useState(200)
-  const { fetchFn, mapFn } = sectionMap(spotifyApi)[swrKey]
+  const [maxHeight, setMaxHeight] = useState(281)
+  const { fetchFn, mapFn } = sectionRecord(spotifyApi)[swrKey]
   const { data } = useSWR(swrKey, fetchFn)
-  // console.log(data)
 
   useEffect(() => {
     const onResize = () => {
-      setMaxHeight(ref?.offsetHeight || 200)
+      setMaxHeight(ref?.offsetHeight || 281)
     }
 
     window.addEventListener('resize', onResize)
@@ -30,10 +28,6 @@ const List = ({ swrKey }: Props) => {
       window.removeEventListener('resize', onResize)
     }
   }, [ref?.offsetHeight])
-
-  const findAlbum = (id: string, to: number) => {
-    return data?.body.items.findIndex((value, index) => index < to && value.track.album.id === id) !== -1
-  }
 
   return (
     <>
@@ -51,23 +45,22 @@ const List = ({ swrKey }: Props) => {
           maxHeight
         }}
       >
-        {data?.body.items.map((item, index) => {
-          if (!findAlbum(item.track.album.id, index)) {
-            const sectionItem = mapFn(item)
-            if (isAlbumObjectSimplified(sectionItem)) {
-              return (
-                <ListItem
-                  key={sectionItem.id}
-                  item={sectionItem}
-                  artists={item.track.artists}
-                  itemRef={ref}
-                  setRef={index === 0 ? setRef : undefined}
-                  setMaxHeight={index === 0 ? setMaxHeight : undefined}
-                />
-              )
-            }
-          }
-        })}
+        {data &&
+          data?.body.items
+            .map((item, index) => mapFn(data.body.items, item, index))
+            .map((item, index) => {
+              if (item)
+                return (
+                  <ListItem
+                    key={item.id}
+                    item={item}
+                    artists={item.artists}
+                    itemRef={ref}
+                    setRef={index === 0 ? setRef : undefined}
+                    setMaxHeight={index === 0 ? setMaxHeight : undefined}
+                  />
+                )
+            })}
       </div>
     </>
   )
