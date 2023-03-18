@@ -18,7 +18,7 @@ const SearchResult = () => {
 
   return (
     <>
-      <div className='mt-5 grid grid-cols-12 gap-6 overflow-hidden'>
+      <div className='mt-4 grid grid-cols-12 gap-6 overflow-hidden'>
         <div className='col-span-5'>
           <h2 className='mb-4 text-2xl font-bold tracking-tight'>Top result</h2>
           <TopResult item={data?.body.playlists?.items[0]} />

@@ -10,19 +10,28 @@ const NotFound = lazy(() => import('~/pages/NotFound'))
 const Search = lazy(() => import('~/pages/Search'))
 const AllResults = lazy(() => import('~/components/search/AllResults'))
 const TypeResults = lazy(() => import('~/components/search/TypeResults'))
+const SongResults = lazy(() => import('~/components/search/SongResults'))
 
 export const paths = {
   root: { path: '/', fallback: Fragment },
   main: { path: '/', fallback: MainSkeleton },
   search: { path: '/search' },
   searchValue: { path: '/search/:value' },
-  searchTypes: {
-    path: ['/search/:value/playlists', '/search/:value/albums', '/search/:value/songs', '/search/:value/artists'],
-    fallback: Fragment
-  },
+  searchPlaylist: { path: '/search/:value/playlists' },
+  searchAlbum: { path: '/search/:value/albums' },
+  searchSong: { path: '/search/:value/songs' },
+  searchArtist: { path: '/search/:value/artists' },
   section: { path: '/section/:section', fallback: SectionSkeleton },
   login: { path: '/login', fallback: Fragment }
 }
+
+export const searchPaths = [
+  paths.searchValue.path,
+  paths.searchPlaylist.path,
+  paths.searchArtist.path,
+  paths.searchSong.path,
+  paths.searchAlbum.path
+]
 
 const routes = (
   <Route errorElement={<NotFound />}>
@@ -30,9 +39,10 @@ const routes = (
       <Route index element={<Main />} />
       <Route path={paths.search.path} element={<Search />}>
         <Route path={paths.searchValue.path} element={<AllResults />} />
-        {paths.searchTypes.path.map((path) => (
-          <Route key={path} path={path} element={<TypeResults />} />
-        ))}
+        <Route path={paths.searchPlaylist.path} element={<TypeResults />} />
+        <Route path={paths.searchAlbum.path} element={<TypeResults />} />
+        <Route path={paths.searchArtist.path} element={<TypeResults />} />
+        <Route path={paths.searchSong.path} element={<SongResults />} />
       </Route>
       <Route path={paths.section.path} element={<Section />} />
     </Route>

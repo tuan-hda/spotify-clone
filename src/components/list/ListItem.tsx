@@ -13,19 +13,21 @@ interface Props {
     | SpotifyApi.ArtistObjectFull
     | SpotifyApi.TrackObjectFull
     | SpotifyApi.PlaylistObjectSimplified
-  artists?: SpotifyApi.ArtistObjectSimplified[]
-  setRef?: (ref: HTMLDivElement | null) => void
-  setMaxHeight?: (value: number) => void
+  artists?: SpotifyApi.ArtistObjectSimplified[] | false
+  setRef?: ((ref: HTMLDivElement | null) => void) | false
+  setMaxHeight?: ((value: number) => void) | false
   itemRef?: HTMLDivElement | null
+  releaseDate?: string | false
+  owner?: string | false
 }
 
 const FallbackArtist = () => (
   <div className='flex aspect-square rounded-full bg-s-gray-12 p-[52px]'>
-    <img src={ViewArtist} alt='Artist' className='m-auto aspect-square w-full brightness-[0.7]' />
+    <img src={ViewArtist} alt='Artist' className='m-auto aspect-square w-full shadow-s-4 brightness-[0.7]' />
   </div>
 )
 
-const ListItem = ({ item, artists, setRef, setMaxHeight, itemRef }: Props) => {
+const ListItem = ({ item, artists, setRef, setMaxHeight, itemRef, releaseDate, owner }: Props) => {
   const [device_id, spotifyApi] = useSpotifyStore((state) => [state.deviceId, state.spotifyApi], shallow)
   const onRefChange = useCallback(
     (node: HTMLDivElement | null) => {
@@ -61,7 +63,7 @@ const ListItem = ({ item, artists, setRef, setMaxHeight, itemRef }: Props) => {
   return (
     <div
       ref={onRefChange}
-      className='group h-[281px] cursor-pointer rounded-md bg-s-black-4 p-4 transition duration-300 hover:bg-s-gray-2'
+      className='group cursor-pointer rounded-md bg-s-black-4 p-4 transition duration-300 hover:bg-s-gray-2'
     >
       <div className='relative'>
         {getImage() ? (
@@ -71,7 +73,7 @@ const ListItem = ({ item, artists, setRef, setMaxHeight, itemRef }: Props) => {
             src={getImage()}
             alt={item.name}
             className={classNames(
-              'aspect-square w-full object-cover',
+              'aspect-square w-full object-cover shadow-s-4',
               item.type === 'artist' ? 'rounded-full' : 'rounded'
             )}
           />
@@ -80,14 +82,16 @@ const ListItem = ({ item, artists, setRef, setMaxHeight, itemRef }: Props) => {
         )}
         <PlayButton onClick={play} className='absolute bottom-1 right-2 group-hover:-translate-y-2' />
       </div>
-      <CustomLink to={`/album/${item.id}`} className='mt-4 block text-base font-bold'>
+      <CustomLink to={`/album/${item.id}`} className='mt-[18px] block text-base font-bold'>
         <abbr title={item.name} className='ellipsis block no-underline'>
           {item.name}
         </abbr>
       </CustomLink>
-      <p className='second-ellipsis mt-1 h-11 leading-[22px] text-s-gray-8'>
+      <p className='second-ellipsis mt-1 max-h-[44px] min-h-[32px] leading-[22px] text-s-gray-8'>
+        {owner && 'By ' + owner}
         {item.type !== 'playlist' && (
           <>
+            {releaseDate && releaseDate.slice(0, 4) + ' • '}
             {artists
               ? artists.map((artist, index) => (
                   <ArtistCredit disableColorChange key={artist.id} artist={artist} index={index} />

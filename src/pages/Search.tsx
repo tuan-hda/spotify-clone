@@ -48,7 +48,7 @@ const Search = () => {
         <div className='h-16' />
         {value && (
           <>
-            <div className='mt-2 px-0.5'>
+            <div className='sticky top-16 z-[1] -mx-4 bg-s-black-3 py-2 px-4 lg:-mx-8 lg:px-8'>
               <Tabs />
             </div>
             <Outlet />

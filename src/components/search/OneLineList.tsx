@@ -24,8 +24,11 @@ const OneLineList = ({ data, name }: Props) => {
                 key={item.id}
                 item={item}
                 itemRef={ref}
-                setRef={index === 0 ? setRef : undefined}
-                setMaxHeight={index === 0 ? setMaxHeight : undefined}
+                artists={item.type === 'album' && item.artists}
+                releaseDate={item.type === 'album' && item.release_date}
+                owner={item.type === 'playlist' && item.owner.display_name}
+                setRef={index === 0 && setRef}
+                setMaxHeight={index === 0 && setMaxHeight}
               />
             )
         })}
