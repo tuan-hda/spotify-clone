@@ -3,7 +3,7 @@ import { matchPath } from 'react-router-dom'
 import { paths } from '~/config/routes'
 
 const getFallback = (pathname: string) => {
-  const match = Object.values(paths).find((path) => matchPath(path.path, pathname))
+  const match = Object.values(paths).find((path) => matchPath(!Array.isArray(path.path) ? path.path : '', pathname))
 
   return match?.fallback || Fragment
 }

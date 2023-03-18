@@ -3,8 +3,7 @@ import { useSpotifyStore } from '~/store/spotify'
 import useImmutableSWR from 'swr/immutable'
 import { shallow } from 'zustand/shallow'
 import { CustomLink } from '../common'
-import { extractId } from '~/utils/utils'
-import { Fragment } from 'react'
+import ArtistCredit from '../common/ArtistCredit'
 
 const Track = () => {
   const [playbackState, spotifyApi] = useSpotifyStore((state) => [state.playbackState, state.spotifyApi], shallow)
@@ -31,15 +30,10 @@ const Track = () => {
         >
           {track.name}
         </CustomLink>
-        <p className='overflow-hidden text-ellipsis whitespace-nowrap text-ss font-light text-s-gray-5'>
-          {track.artists.map((artist, index) => (
-            <Fragment key={artist.uri}>
-              {index !== 0 && ', '}
-              <CustomLink className='hover:underline' to={`/artist/${extractId(artist.uri)}`}>
-                {artist.name}
-              </CustomLink>
-            </Fragment>
-          ))}
+        <p className='group overflow-hidden text-ellipsis whitespace-nowrap text-ss font-light text-s-gray-5'>
+          {track.artists.map((artist, index) => {
+            return <ArtistCredit artist={artist} index={index} key={artist.uri} />
+          })}
         </p>
       </div>
 

@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { useMatch, useResolvedPath } from 'react-router-dom'
+import { matchPath, useLocation, useMatch, useResolvedPath } from 'react-router-dom'
 import { paths } from '~/config/routes'
 import Icons, { IconsProps } from './Icons'
 
@@ -24,20 +24,17 @@ export default function IconButton<T extends React.ElementType = 'button'>({
   ...props
 }: ButtonProps<T> & Omit<React.ComponentPropsWithoutRef<T>, keyof ButtonProps<T>> & Props) {
   const Component = as || 'button'
-
+  const location = useLocation()
   const resolved = useResolvedPath(to)
   const match = useMatch({
     path: resolved.pathname,
     end: true
   })
-  const searchMatch = useMatch({
-    path: paths.searchValue.path,
-    end: true
-  })
+  const searchPaths = [...paths.searchTypes.path, paths.searchValue.path]
 
   const checkIsSelected = () => {
     if (to && match) return true
-    if (to.includes('/search') && searchMatch) return true
+    if (to === '/search' && searchPaths.find((path) => matchPath(path, location.pathname))) return true
     return false
   }
 
