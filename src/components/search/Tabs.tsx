@@ -1,6 +1,10 @@
 import classNames from 'classnames'
 import { useMatch, useParams, useResolvedPath } from 'react-router-dom'
+import { useSpotifyStore } from '~/store/spotify'
 import CustomLink from '../common/CustomLink'
+import useSWR from 'swr'
+import { useEffect, useState } from 'react'
+import { Response } from '~/types/index.type'
 
 interface TabItemProps {
   to: string
@@ -30,24 +34,46 @@ const TabItem = ({ to, label }: TabItemProps) => {
 
 const Tabs = () => {
   const { value } = useParams()
+  const spotifyApi = useSpotifyStore((state) => state.spotifyApi)
+  const { data } = useSWR(
+    value ? ['/search', value] : null,
+    async ([, value]) => spotifyApi.search(value, ['album', 'artist', 'playlist', 'track']),
+    { suspense: false }
+  )
+
+  const [previousData, setPreviousData] = useState<Response<SpotifyApi.SearchResponse>>()
+
+  useEffect(() => {
+    if (data) setPreviousData(data)
+  }, [data])
 
   return (
     <ul className='flex flex-wrap gap-3 text-center text-sm font-medium'>
-      <li>
-        <TabItem to={`/search/${value}`} label='All' />
-      </li>
-      <li>
-        <TabItem to={`/search/${value}/playlists`} label='Playlists' />
-      </li>
-      <li>
-        <TabItem to={`/search/${value}/songs`} label='Songs' />
-      </li>
-      <li>
-        <TabItem to={`/search/${value}/albums`} label='Albums' />
-      </li>
-      <li>
-        <TabItem to={`/search/${value}/artists`} label='Artists' />
-      </li>
+      {previousData && (
+        <li>
+          <TabItem to={`/search/${value}`} label='All' />
+        </li>
+      )}
+      {previousData?.body.playlists?.total && previousData.body.playlists.total > 0 ? (
+        <li>
+          <TabItem to={`/search/${value}/playlists`} label='Playlists' />
+        </li>
+      ) : null}
+      {previousData?.body.tracks?.total && previousData.body.tracks.total > 0 ? (
+        <li>
+          <TabItem to={`/search/${value}/songs`} label='Songs' />
+        </li>
+      ) : null}
+      {previousData?.body.albums?.total && previousData.body.albums.total > 0 ? (
+        <li>
+          <TabItem to={`/search/${value}/albums`} label='Albums' />
+        </li>
+      ) : null}
+      {previousData?.body.artists?.total && previousData.body.artists.total > 0 ? (
+        <li>
+          <TabItem to={`/search/${value}/artists`} label='Artists' />
+        </li>
+      ) : null}
     </ul>
   )
 }

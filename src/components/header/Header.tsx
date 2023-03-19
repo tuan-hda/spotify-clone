@@ -9,9 +9,8 @@ import { shallow } from 'zustand/shallow'
 import { hexWithOpacityToRgba } from '~/utils/utils'
 import DefaultAvatar from '~/assets/img/default_avatar.png'
 import { CustomTooltip } from '../common'
-import { useLocation } from 'react-router-dom'
-
-const OPAQUE_POINT = 280
+import { matchPath, useLocation } from 'react-router-dom'
+import { paths } from '~/config/routes'
 
 const Header = () => {
   const spotifyApi = useSpotifyStore((state) => state.spotifyApi)
@@ -20,11 +19,23 @@ const Header = () => {
     shallow
   )
   const { data: user } = useSWR('/get-me', async () => spotifyApi.getMe())
-
   const location = useLocation()
+  const excludePaths = useMemo(
+    () => [
+      paths.searchValue.path,
+      paths.searchAlbum.path,
+      paths.searchArtist.path,
+      paths.searchPlaylist.path,
+      paths.searchSong.path
+    ],
+    []
+  )
 
   const top = useScrollPosition((state) => state.top)
-  const opacity = useMemo(() => Math.min(top / OPAQUE_POINT, 1), [top])
+  const opacity = useMemo(() => {
+    const opaquePoint = excludePaths.find((path) => matchPath(path, location.pathname)) ? 50 : 280
+    return Math.min(top / opaquePoint, 1)
+  }, [excludePaths, location.pathname, top])
 
   const style = useMemo(() => {
     return {
@@ -32,7 +43,7 @@ const Header = () => {
         location.pathname !== '/' ? '#0b0b0b' : hexWithOpacityToRgba(dashboardStartColor || defaultStartColor),
       opacity
     }
-  }, [opacity, dashboardStartColor, defaultStartColor, location]) as React.CSSProperties
+  }, [location.pathname, dashboardStartColor, defaultStartColor, opacity]) as React.CSSProperties
 
   return (
     <div className='sticky z-[1]'>

@@ -1,9 +1,10 @@
 import { useSpotifyStore } from '~/store/spotify'
 import useSWR from 'swr'
 import { useParams } from 'react-router-dom'
-import TopResult from './TopResult'
-import Song from './Song'
-import OneLineList from './OneLineList'
+import TopResult from '../components/search/TopResult'
+import Song from '../components/search/Song'
+import OneLineList from '../components/search/OneLineList'
+import NotFound from '~/components/search/NotFound'
 
 const SearchResult = () => {
   const { value } = useParams()
@@ -14,14 +15,31 @@ const SearchResult = () => {
     { suspense: false }
   )
 
-  if (!data || !data.body.playlists) return null
+  if (!data) return null
+
+  if (
+    data.body.albums?.total === 0 &&
+    data.body.playlists?.total === 0 &&
+    data.body.tracks?.total === 0 &&
+    data.body.artists?.total === 0
+  )
+    return <NotFound />
+
+  const getItem = () => {
+    if (data.body.playlists?.total && data.body.playlists.total > 0) return data?.body.playlists?.items[0]
+    if (data.body.tracks?.total && data.body.tracks?.total > 0) return data?.body.tracks?.items[0]
+    if (data.body.albums?.total && data.body.albums?.total > 0) return data?.body.albums?.items[0]
+    if (data.body.artists?.total && data.body.artists?.total > 0) return data?.body.artists?.items[0]
+  }
+
+  const item = getItem()
 
   return (
     <>
       <div className='mt-4 grid grid-cols-12 gap-6 overflow-hidden'>
         <div className='col-span-5'>
           <h2 className='mb-4 text-2xl font-bold tracking-tight'>Top result</h2>
-          <TopResult item={data?.body.playlists?.items[0]} />
+          {item && <TopResult item={item} />}
         </div>
         <div className='col-span-7'>
           <h2 className='mb-4 text-2xl font-bold tracking-tight'>Songs</h2>

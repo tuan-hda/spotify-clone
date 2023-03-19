@@ -7,10 +7,10 @@ const Main = lazy(() => import('~/pages/Main'))
 const Login = lazy(() => import('~/pages/Login'))
 const Section = lazy(() => import('~/pages/Section'))
 const NotFound = lazy(() => import('~/pages/NotFound'))
-const Search = lazy(() => import('~/pages/Search'))
-const AllResults = lazy(() => import('~/components/search/AllResults'))
-const TypeResults = lazy(() => import('~/components/search/TypeResults'))
-const SongResults = lazy(() => import('~/components/search/SongResults'))
+const Search = lazy(() => import('~/layouts/SearchLayout'))
+const AllResults = lazy(() => import('~/pages/AllResults'))
+const TypeResults = lazy(() => import('~/pages/TypeResults'))
+const SongResults = lazy(() => import('~/pages/SongResults'))
 
 export const paths = {
   root: { path: '/', fallback: Fragment },

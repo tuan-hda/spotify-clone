@@ -5,6 +5,7 @@ import { rgbToHex } from '~/utils/utils'
 import { shallow } from 'zustand/shallow'
 import tinycolor from 'tinycolor2'
 import PlayButton from '../common/PlayButton'
+import ViewAlbum from '~/assets/icons/ViewAlbum.png'
 
 interface Props extends SpotifyApi.SingleArtistResponse {
   isDefault?: boolean
@@ -16,7 +17,7 @@ const Artist = ({ images, name, isDefault = false }: Props) => {
     (state) => [state.setDashboardStartColor, state.setDefaultStartColor],
     shallow
   )
-  const ref = useRef(null)
+  const ref = useRef<HTMLImageElement | null>(null)
 
   const onMouseEnter = useCallback(() => {
     setDashboardStartColor(dominantColor)
@@ -52,7 +53,7 @@ const Artist = ({ images, name, isDefault = false }: Props) => {
         draggable={false}
         crossOrigin='anonymous'
         ref={ref}
-        src={images.at(0)?.url}
+        src={images.at(0)?.url || ViewAlbum}
         alt={name}
         loading='lazy'
         className='h-16 w-16 object-cover shadow-s-1 xl:h-20 xl:w-20'

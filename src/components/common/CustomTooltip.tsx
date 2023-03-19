@@ -8,7 +8,10 @@ const CustomTooltip = (props: Props) => {
     <Tooltip
       {...props}
       arrow={false}
-      className={classNames('tooltip-shadow rounded-md bg-s-gray-2 px-[7px] py-[6px]', props.className)}
+      className={classNames(
+        'tooltip-shadow whitespace-nowrap rounded-md bg-s-gray-2 px-[7px] py-[6px]',
+        props.className
+      )}
       trigger='hover'
     />
   )

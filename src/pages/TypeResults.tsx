@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 import { useMatch, useParams } from 'react-router-dom'
 import { useSpotifyStore } from '~/store/spotify'
-import { ListItem } from '../list'
+import { ListItem } from '~/components/list'
 import { paths } from '~/config/routes'
 
 const TypeResult = () => {

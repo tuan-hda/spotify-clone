@@ -2,13 +2,19 @@ import { CustomLink } from '../common'
 import PlayButton from '../common/PlayButton'
 import { useSpotifyStore } from '~/store/spotify'
 import { shallow } from 'zustand/shallow'
+import ArtistCredit from '../common/ArtistCredit'
 
 interface Props {
-  item: SpotifyApi.PlaylistObjectSimplified
+  item:
+    | SpotifyApi.PlaylistObjectSimplified
+    | SpotifyApi.TrackObjectFull
+    | SpotifyApi.ArtistObjectFull
+    | SpotifyApi.AlbumObjectSimplified
   artists?: SpotifyApi.ArtistObjectSimplified[]
+  owner?: string
 }
 
-const TopResult = ({ item }: Props) => {
+const TopResult = ({ item, owner, artists }: Props) => {
   const [device_id, spotifyApi] = useSpotifyStore((state) => [state.deviceId, state.spotifyApi], shallow)
 
   const play = () => {
@@ -18,12 +24,22 @@ const TopResult = ({ item }: Props) => {
     })
   }
 
+  const getImage = () => {
+    if (item.type === 'track') return item.album.images[0].url
+    return item.images[0].url
+  }
+
+  const getType = () => {
+    if (item.type === 'track') return 'Song'
+    return item.type[0].toUpperCase() + item.type.slice(1)
+  }
+
   return (
     <div className='group relative cursor-pointer rounded-md bg-s-black-4 p-5 transition duration-300 hover:bg-s-gray-2'>
       <div>
         <img
           loading='lazy'
-          src={item.images[0].url}
+          src={getImage()}
           alt={item.name}
           className='aspect-square w-full max-w-[92px] rounded object-cover'
         />
@@ -38,8 +54,17 @@ const TopResult = ({ item }: Props) => {
         </abbr>
       </CustomLink>
       <p className='flex items-center gap-2'>
-        <span className='text-s-gray-7'>By Spotify</span>
-        <span className='rounded-full bg-s-black-7 px-2 py-[6px]'>Playlist</span>
+        {owner && 'By ' + owner}
+        {item.type !== 'playlist' && (
+          <>
+            {artists
+              ? artists.map((artist, index) => (
+                  <ArtistCredit disableColorChange key={artist.id} artist={artist} index={index} />
+                ))
+              : 'Artist'}
+          </>
+        )}
+        <span className='rounded-full bg-s-black-7 px-2 py-[6px]'>{getType()}</span>
       </p>
     </div>
   )
