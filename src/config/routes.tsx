@@ -1,13 +1,13 @@
 import { Route } from 'react-router-dom'
-import MainLayout from '~/layouts/MainLayout'
 import { Fragment, lazy } from 'react'
 import { MainSkeleton, SectionSkeleton } from '~/components/skeleton'
 
+const MainLayout = lazy(() => import('~/layouts/MainLayout'))
+const SearchLayout = lazy(() => import('~/layouts/SearchLayout'))
 const Main = lazy(() => import('~/pages/Main'))
 const Login = lazy(() => import('~/pages/Login'))
 const Section = lazy(() => import('~/pages/Section'))
 const NotFound = lazy(() => import('~/pages/NotFound'))
-const Search = lazy(() => import('~/layouts/SearchLayout'))
 const AllResults = lazy(() => import('~/pages/AllResults'))
 const TypeResults = lazy(() => import('~/pages/TypeResults'))
 const SongResults = lazy(() => import('~/pages/SongResults'))
@@ -37,7 +37,7 @@ const routes = (
   <Route errorElement={<NotFound />}>
     <Route path={paths.main.path} element={<MainLayout />}>
       <Route index element={<Main />} />
-      <Route path={paths.search.path} element={<Search />}>
+      <Route path={paths.search.path} element={<SearchLayout />}>
         <Route path={paths.searchValue.path} element={<AllResults />} />
         <Route path={paths.searchPlaylist.path} element={<TypeResults />} />
         <Route path={paths.searchAlbum.path} element={<TypeResults />} />

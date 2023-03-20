@@ -14,7 +14,7 @@ const MainSkeleton = () => {
 
       <div className='mt-5 px-4 lg:px-8'>
         <LineSkeleton className='h-6 w-64' />
-        <div className='mt-5 grid grid-cols-5 gap-6'>
+        <div className='autofill mt-5 gap-6'>
           <CardSkeleton />
           <CardSkeleton />
           <CardSkeleton />
@@ -25,7 +25,7 @@ const MainSkeleton = () => {
 
       <div className='px-4 lg:px-8'>
         <LineSkeleton className='mt-5 h-6 w-64' />
-        <div className='mt-5 grid grid-cols-5 gap-6'>
+        <div className='autofill mt-5 gap-6'>
           <CardSkeleton />
           <CardSkeleton />
           <CardSkeleton />
@@ -36,7 +36,7 @@ const MainSkeleton = () => {
 
       <div className='px-4 lg:px-8'>
         <LineSkeleton className='mt-5 h-6 w-64' />
-        <div className='mt-5 grid grid-cols-5 gap-6'>
+        <div className='autofill mt-5 gap-6'>
           <CardSkeleton />
           <CardSkeleton />
           <CardSkeleton />

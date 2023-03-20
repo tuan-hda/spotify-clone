@@ -121,7 +121,7 @@
 
 html {
   height: 100%;
-  overflow-y: hidden;
+  overflow: hidden;
 }
 
 h1,
@@ -140,4 +140,15 @@ h6 {
 
 .player button {
   outline: none;
+}
+
+.autofill {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+}
+
+@media screen and (min-width: 1280px) {
+  .autofill {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
 }

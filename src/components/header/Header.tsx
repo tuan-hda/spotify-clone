@@ -46,7 +46,7 @@ const Header = () => {
   }, [location.pathname, dashboardStartColor, defaultStartColor, opacity]) as React.CSSProperties
 
   return (
-    <div className='sticky z-[1]'>
+    <div className='sticky z-[2]'>
       <div className='pointer-events-none absolute h-16 w-full flex-1 transition-colors duration-700' style={style} />
       <header className='relative z-[2] flex w-auto gap-4 bg-transparent py-4 px-4 lg:px-8'>
         <HistoryButton type='back' />
@@ -55,17 +55,17 @@ const Header = () => {
         <div className='m-auto' />
 
         <CustomTooltip content={user?.body.display_name}>
-          <button className='pointer-events-auto ml-auto flex h-8 w-fit items-center gap-[6px] rounded-full bg-black bg-opacity-90 hover:bg-s-gray-2 lg:w-[180px]'>
+          <button className='pointer-events-auto ml-auto flex h-8 w-fit max-w-[180px] items-center gap-[6px] rounded-full bg-black bg-opacity-90 hover:bg-s-gray-2'>
             <img
               src={user?.body?.images?.at(0)?.url || DefaultAvatar}
               alt='User Avatar'
               loading='lazy'
               className='aspect-square h-full flex-shrink-0 rounded-full p-0.5'
             />
-            <span className='hidden overflow-hidden text-ellipsis whitespace-nowrap font-bold lg:inline'>
+            <span className='hidden overflow-hidden text-ellipsis whitespace-nowrap font-bold xl:inline'>
               {user?.body?.display_name}
             </span>
-            <AiFillCaretDown className='ml-auto mr-1 hidden w-6 text-white lg:inline' />
+            <AiFillCaretDown className='ml-auto mr-1 hidden w-6 text-white xl:inline' />
           </button>
         </CustomTooltip>
       </header>

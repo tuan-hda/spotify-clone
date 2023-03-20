@@ -37,14 +37,14 @@ const SearchResult = () => {
   return (
     <>
       <div className='mt-4 grid grid-cols-12 gap-6 overflow-hidden'>
-        <div className='col-span-5'>
+        <div className='col-span-full xl:col-span-5'>
           <h2 className='mb-4 text-2xl font-bold tracking-tight'>Top result</h2>
           {item && <TopResult item={item} />}
         </div>
-        <div className='col-span-7'>
+        <div className='col-span-full xl:col-span-7'>
           <h2 className='mb-4 text-2xl font-bold tracking-tight'>Songs</h2>
           {data.body.tracks?.items.slice(0, 4).map((track) => (
-            <Song key={track.id} track={track} />
+            <Song hideAlbum key={track.id} track={track} />
           ))}
         </div>
       </div>

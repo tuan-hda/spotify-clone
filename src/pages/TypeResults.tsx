@@ -26,7 +26,7 @@ const TypeResult = () => {
   })
 
   return (
-    <div className='mt-5 grid grid-cols-5 gap-6 overflow-hidden'>
+    <div className='autofill mt-5 gap-6 overflow-hidden overflow-x-auto'>
       {matchPlaylist &&
         data?.body.playlists?.items.map((item) => (
           <ListItem owner={item.owner.display_name} key={item.id} item={item} />

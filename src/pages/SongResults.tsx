@@ -21,13 +21,13 @@ const SongResults = () => {
           <span className='ml-5'>Title</span>
         </div>
         <div className='col-span-5 flex items-center'>
-          <span>Album</span>
-          <Time className='ml-auto mr-8 fill-s-gray-7' />
+          <span className='hidden lg:inline'>Album</span>
+          <Time className='ml-auto mr-7 fill-s-gray-7' />
         </div>
       </div>
       <div className='mt-4 px-8'>
         {data?.body.tracks?.items.map((track, index) => (
-          <Song paddingLeft='16px' enableMore paddingRight='16px' key={track.id} index={index + 1} track={track} />
+          <Song paddingLeft='16px' paddingRight='16px' key={track.id} index={index + 1} track={track} />
         ))}
       </div>
     </div>

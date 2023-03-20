@@ -6,42 +6,43 @@ import { convertMsToTime } from '~/utils/utils'
 import { CustomTooltip } from '../common'
 import ArtistCredit from '../common/ArtistCredit'
 import { HiDotsHorizontal } from 'react-icons/hi'
+import Like from '~/assets/icons/Like.png'
 
 interface Props {
   track: SpotifyApi.TrackObjectFull
   index?: number
   paddingLeft?: string
   paddingRight?: string
-  enableMore?: boolean
+  hideAlbum?: boolean
 }
 
-const Song = ({ track, enableMore, index, paddingLeft, paddingRight }: Props) => {
+const Song = ({ track, index, paddingLeft, paddingRight, hideAlbum }: Props) => {
   const duration = convertMsToTime(track.duration_ms)
   const [spotifyApi, device_id, playbackState, player] = useSpotifyStore(
     (state) => [state.spotifyApi, state.deviceId, state.playbackState, state.spotifyPlayer],
     shallow
   )
 
-  const play = () => {
-    player?.activateElement()
+  const play = async () => {
+    await player?.activateElement()
     if (playbackState?.track_window.current_track.id !== track.id)
-      spotifyApi.play({
+      await spotifyApi.play({
         device_id,
         uris: [track.uri]
       })
-    else player?.togglePlay()
+    else await player?.togglePlay()
   }
 
   const isPlaying = () => {
     return playbackState && !playbackState.paused && playbackState?.track_window.current_track.id === track.id
   }
 
-  const ToggleButton = () => {
+  const ToggleButton = ({ disableToggle }: { disableToggle?: boolean }) => {
     let Element = MdPlayArrow
     if (isPlaying()) Element = MdOutlinePause
     return (
       <Element
-        onClick={play}
+        onClick={disableToggle ? undefined : play}
         className={classNames(
           'hidden h-5 w-5 cursor-default text-white group-hover:block',
           index ? 'top-4' : 'absolute'
@@ -54,7 +55,9 @@ const Song = ({ track, enableMore, index, paddingLeft, paddingRight }: Props) =>
     if (index) return <>{children}</>
     return (
       <CustomTooltip
-        content={`Play ${track.name} by ${track.artists.map((artist) => artist.name).join(', ')}`}
+        content={`${isPlaying() ? 'Pause' : 'Play'} ${track.name} by ${track.artists
+          .map((artist) => artist.name)
+          .join(', ')}`}
         arrow={false}
       >
         {children}
@@ -66,7 +69,7 @@ const Song = ({ track, enableMore, index, paddingLeft, paddingRight }: Props) =>
     <div
       key={track.id}
       className={classNames(
-        'group relative grid cursor-default grid-cols-12 rounded py-[6px]',
+        'group relative grid cursor-default grid-cols-12 rounded py-[6px] px-2',
         isPlaying() ? 'bg-s-gray-13' : 'hover:bg-s-gray-9'
       )}
       style={{ paddingLeft, paddingRight }}
@@ -89,14 +92,14 @@ const Song = ({ track, enableMore, index, paddingLeft, paddingRight }: Props) =>
           <div
             className='flex h-10 w-10 flex-shrink-0 cursor-default items-center justify-center'
             role='presentation'
-            onClick={index ? undefined : play}
+            onClick={play}
           >
             <img
               className={classNames('h-full w-full', !index && 'group-hover:brightness-50')}
               src={track.album.images[0].url}
               alt={track.name}
             />
-            {!index && <ToggleButton />}
+            {!index && <ToggleButton disableToggle />}
           </div>
         </ImageWrapper>
 
@@ -111,17 +114,25 @@ const Song = ({ track, enableMore, index, paddingLeft, paddingRight }: Props) =>
       </div>
 
       <div className='col-span-5 flex items-center'>
-        <span className='ellipsis hidden text-s-gray-7 group-hover:text-white lg:inline'>{track.album.name}</span>
-        <span className='ml-auto text-s-gray-8'>{duration}</span>
-        {enableMore && (
-          <CustomTooltip
-            content={`More options for ${track.name} by ${track.album.artists.map((artist) => artist.name).join(', ')}`}
-          >
-            <button className='ml-2 mt-1 opacity-0 group-hover:opacity-100'>
-              <HiDotsHorizontal className='text-lg' />
-            </button>
-          </CustomTooltip>
-        )}
+        <span className={classNames('ellipsis hidden text-s-gray-7 group-hover:text-white', !hideAlbum && 'lg:inline')}>
+          {track.album.name}
+        </span>
+
+        <div className='min-w-0 flex-1' />
+
+        <CustomTooltip content='Save to your library'>
+          <button className='mt-1 ml-4 min-w-[18px] cursor-default opacity-0 brightness-75 hover:brightness-100 group-hover:opacity-100'>
+            <img src={Like} alt='Save to library' className='h-4' />
+          </button>
+        </CustomTooltip>
+        <span className='ml-8 text-s-gray-8'>{duration}</span>
+        <CustomTooltip
+          content={`More options for ${track.name} by ${track.album.artists.map((artist) => artist.name).join(', ')}`}
+        >
+          <button className='ml-3 mt-1 cursor-default opacity-0 group-hover:opacity-100'>
+            <HiDotsHorizontal className='text-lg' />
+          </button>
+        </CustomTooltip>
       </div>
     </div>
   )

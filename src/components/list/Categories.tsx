@@ -12,7 +12,7 @@ const Categories = () => {
   )
 
   return (
-    <div className='mt-5 grid grid-cols-5 gap-6 overflow-hidden'>
+    <div className='autofill mt-5 gap-6 overflow-hidden'>
       {data?.body.categories.items.map((category, index) => (
         <CustomLink
           key={category.id}

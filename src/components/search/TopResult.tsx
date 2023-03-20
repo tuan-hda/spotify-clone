@@ -11,10 +11,9 @@ interface Props {
     | SpotifyApi.ArtistObjectFull
     | SpotifyApi.AlbumObjectSimplified
   artists?: SpotifyApi.ArtistObjectSimplified[]
-  owner?: string
 }
 
-const TopResult = ({ item, owner, artists }: Props) => {
+const TopResult = ({ item, artists }: Props) => {
   const [device_id, spotifyApi] = useSpotifyStore((state) => [state.deviceId, state.spotifyApi], shallow)
 
   const play = () => {
@@ -54,7 +53,7 @@ const TopResult = ({ item, owner, artists }: Props) => {
         </abbr>
       </CustomLink>
       <p className='flex items-center gap-2'>
-        {owner && 'By ' + owner}
+        <span className='text-s-gray-7'>{'owner' in item && 'By ' + item.owner.display_name}</span>
         {item.type !== 'playlist' && (
           <>
             {artists

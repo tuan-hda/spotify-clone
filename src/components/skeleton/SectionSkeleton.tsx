@@ -10,7 +10,7 @@ const SectionSkeleton = () => {
           <LineSkeleton className='h-6 w-64' />
         </header>
 
-        <div className='mt-5 grid grid-cols-5 gap-6 overflow-hidden'>
+        <div className='autofill mt-5 gap-6 overflow-hidden'>
           <CardSkeleton />
           <CardSkeleton />
           <CardSkeleton />

@@ -20,7 +20,7 @@ const useOneLineGrid = () => {
     (props: JSX.IntrinsicElements['div']) => (
       <div
         {...props}
-        className='mt-5 grid grid-cols-5 gap-6 overflow-hidden'
+        className='autofill mt-5 gap-6 overflow-hidden'
         style={{
           maxHeight
         }}
