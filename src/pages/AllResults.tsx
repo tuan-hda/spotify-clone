@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom'
 import TopResult from '../components/search/TopResult'
 import Song from '../components/search/Song'
 import OneLineList from '../components/search/OneLineList'
-import NotFound from '~/components/search/NotFound'
 
 const SearchResult = () => {
   const { value } = useParams()
@@ -16,14 +15,6 @@ const SearchResult = () => {
   )
 
   if (!data) return null
-
-  if (
-    data.body.albums?.total === 0 &&
-    data.body.playlists?.total === 0 &&
-    data.body.tracks?.total === 0 &&
-    data.body.artists?.total === 0
-  )
-    return <NotFound />
 
   const getItem = () => {
     if (data.body.playlists?.total && data.body.playlists.total > 0) return data?.body.playlists?.items[0]
@@ -49,14 +40,26 @@ const SearchResult = () => {
         </div>
       </div>
 
-      <div className='mt-10' />
-      <OneLineList data={data.body.artists} name='Artists' />
+      {data.body.artists?.total && data.body.artists?.total > 0 ? (
+        <>
+          <div className='mt-10' />
+          <OneLineList data={data.body.artists} name='Artists' />
+        </>
+      ) : null}
 
-      <div className='mt-10' />
-      <OneLineList data={data.body.albums} name='Albums' />
+      {data.body.albums?.total && data.body.albums?.total > 0 ? (
+        <>
+          <div className='mt-10' />
+          <OneLineList data={data.body.albums} name='Albums' />
+        </>
+      ) : null}
 
-      <div className='mt-10' />
-      <OneLineList data={data.body.playlists} name='Playlists' />
+      {data.body.playlists?.total && data.body.playlists?.total > 0 ? (
+        <>
+          <div className='mt-10' />
+          <OneLineList data={data.body.playlists} name='Playlists' />
+        </>
+      ) : null}
     </>
   )
 }

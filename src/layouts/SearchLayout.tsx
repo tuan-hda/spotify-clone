@@ -5,13 +5,22 @@ import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import { Suspense, useState } from 'react'
 import { Tabs } from '~/components/search'
 import Categories from '~/components/list/Categories'
+import useSWR from 'swr'
+import { useSpotifyStore } from '~/store/spotify'
+import NotFound from '~/components/search/NotFound'
 
 const Search = () => {
   const { value } = useParams()
   const [search, setSearch] = useState(value ?? '')
+  const spotifyApi = useSpotifyStore((state) => state.spotifyApi)
   const navigate = useNavigate()
+  const { data } = useSWR(
+    value ? ['/search', value] : null,
+    async ([, value]) => spotifyApi.search(value, ['album', 'artist', 'playlist', 'track']),
+    { suspense: false }
+  )
 
-  const debounce = useDebouncedCallback((value) => {
+  const updateUrl = useDebouncedCallback((value) => {
     if (!value) navigate('/search')
     else
       navigate(`/search/${value}`, {
@@ -23,12 +32,12 @@ const Search = () => {
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value)
-    debounce(e.target.value)
+    updateUrl(e.target.value)
   }
 
   const clear = () => {
     setSearch('')
-    debounce('')
+    updateUrl('')
   }
 
   return (
@@ -48,13 +57,24 @@ const Search = () => {
       <div className='px-4 lg:px-8'>
         {value && (
           <>
-            <div className='sticky top-16 z-[1] -mx-4 bg-s-black-3 py-2 px-4 lg:-mx-8 lg:px-8'>
-              <Tabs />
-            </div>
-            <div className='h-2' />
-            <Suspense fallback={<div />}>
-              <Outlet />
-            </Suspense>
+            {data?.body.albums?.total === 0 &&
+            data?.body.playlists?.total === 0 &&
+            data?.body.tracks?.total === 0 &&
+            data?.body.artists?.total === 0 ? (
+              <NotFound />
+            ) : (
+              <>
+                <div className='sticky top-16 z-[1] -mx-4 bg-s-black-3 py-2 px-4 lg:-mx-8 lg:px-8'>
+                  <Tabs />
+                </div>
+                <div className='h-2' />
+                {
+                  <Suspense fallback={<div />}>
+                    <Outlet />
+                  </Suspense>
+                }
+              </>
+            )}
           </>
         )}
         {!value && (

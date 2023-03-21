@@ -37,7 +37,7 @@ export default function MainLayout() {
 
   useEffect(() => {
     const onKeyDown: (this: Document, ev: KeyboardEvent) => void = (e) => {
-      if (e.key === ' ') {
+      if (e.key === ' ' && e.target === document.body) {
         e.preventDefault()
         spotifyPlayer?.togglePlay()
       }

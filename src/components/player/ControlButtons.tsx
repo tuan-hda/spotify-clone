@@ -51,6 +51,27 @@ const ControlButtons = () => {
     return 'Disable repeat'
   }
 
+  const next = async () => {
+    if (playbackState?.track_window.next_tracks.length === 0) {
+      const oldTracks = [...playbackState.track_window.previous_tracks, playbackState.track_window.current_track]
+
+      const res = await spotifyApi.getRecommendations({
+        seed_tracks: [...oldTracks.map((track) => track.id || '')],
+        limit: 1
+      })
+
+      spotifyApi.play({
+        device_id,
+        uris: [...oldTracks.map((track) => track.uri), res.body.tracks[0].uri],
+        offset: {
+          position: oldTracks.length
+        }
+      })
+    } else {
+      player?.nextTrack()
+    }
+  }
+
   return (
     <>
       {/* Shuffle */}
@@ -73,7 +94,7 @@ const ControlButtons = () => {
 
       {/* Next */}
       <CustomTooltip content='Next track'>
-        <Button src={Next} onClick={() => player?.nextTrack()} className='h-[14px] w-[14px]' />
+        <Button src={Next} onClick={next} className='h-[14px] w-[14px]' />
       </CustomTooltip>
 
       {/* Repeat */}
