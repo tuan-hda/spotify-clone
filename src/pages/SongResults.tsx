@@ -15,7 +15,7 @@ const SongResults = () => {
 
   return (
     <div className='-mx-4 lg:-mx-8'>
-      <div className='sticky top-28 z-[2] grid h-9 w-full grid-cols-12 items-center bg-s-black-5 px-12 text-s-gray-7'>
+      <div className='sticky top-28 z-[2] grid h-9 w-full grid-cols-12 items-center border-b border-s-gray-2 bg-s-black-5 px-12 text-s-gray-7'>
         <div className='col-span-7 flex items-center'>
           <span>#</span>
           <span className='ml-5'>Title</span>

@@ -22,6 +22,7 @@ const Control = () => {
 
   const { width, setWidth, active, startResize, onResize, stopResize } = useResize(0, maxWidth, 0, offsetLeft, ref)
 
+  // Interval to increase progress bar
   useEffect(() => {
     let interval: string | number | NodeJS.Timeout | undefined
     if (playbackState && !playbackState.paused) {
@@ -31,6 +32,8 @@ const Control = () => {
           convertToC(convertToC(prev, maxWidth, playbackState.duration) + 1000, playbackState.duration, maxWidth)
         )
       }, 1000)
+    } else {
+      clearInterval(interval)
     }
 
     return () => {
@@ -42,7 +45,10 @@ const Control = () => {
   const duration = convertMsToTime(playbackState?.duration || data?.body.items.at(0)?.track.duration_ms || 0)
 
   const onStopResize = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (stopResize(e)) await spotifyPlayer?.seek(convertToC(width, maxWidth, playbackState?.duration))
+    if (stopResize(e)) {
+      const newPos = convertToC(width, maxWidth, playbackState?.duration)
+      await spotifyPlayer?.seek(newPos)
+    }
   }
 
   return (

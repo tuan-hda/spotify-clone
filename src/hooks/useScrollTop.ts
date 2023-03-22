@@ -4,11 +4,7 @@ const useScrollTop = () => {
   const { pathname } = useLocation()
 
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'auto'
-    })
+    document.querySelector('.custom-scrollbar-container > div:first-child')?.scrollTo(0, 0)
   }, [pathname])
 }
 

@@ -11,6 +11,7 @@ import Button from './Button'
 import { useSpotifyStore } from '~/store/spotify'
 import { shallow } from 'zustand/shallow'
 import useImmutableSWR from 'swr/immutable'
+import { next } from '~/utils/utils'
 
 const Dot = () => <div className='absolute bottom-0 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-s-green-5' />
 
@@ -51,26 +52,7 @@ const ControlButtons = () => {
     return 'Disable repeat'
   }
 
-  const next = async () => {
-    if (playbackState?.track_window.next_tracks.length === 0) {
-      const oldTracks = [...playbackState.track_window.previous_tracks, playbackState.track_window.current_track]
-
-      const res = await spotifyApi.getRecommendations({
-        seed_tracks: [...oldTracks.map((track) => track.id || '')],
-        limit: 1
-      })
-
-      spotifyApi.play({
-        device_id,
-        uris: [...oldTracks.map((track) => track.uri), res.body.tracks[0].uri],
-        offset: {
-          position: oldTracks.length
-        }
-      })
-    } else {
-      player?.nextTrack()
-    }
-  }
+  const nextTrack = () => next(playbackState, spotifyApi, device_id, player)
 
   return (
     <>
@@ -94,7 +76,7 @@ const ControlButtons = () => {
 
       {/* Next */}
       <CustomTooltip content='Next track'>
-        <Button src={Next} onClick={next} className='h-[14px] w-[14px]' />
+        <Button src={Next} onClick={nextTrack} className='h-[14px] w-[14px]' />
       </CustomTooltip>
 
       {/* Repeat */}
@@ -103,7 +85,9 @@ const ControlButtons = () => {
           {playbackState?.repeat_mode === 2 ? (
             <RepeatOne className='fill-s-green-5' />
           ) : (
-            <Repeat className={classNames('-mt-1', playbackState?.repeat_mode ? 'fill-s-green-5' : 'fill-white')} />
+            <Repeat
+              className={classNames('-mt-1', playbackState?.repeat_mode === 1 ? 'fill-s-green-5' : 'fill-white')}
+            />
           )}
           {playbackState?.repeat_mode === 1 && <Dot />}
           {playbackState?.repeat_mode === 2 && <Dot />}

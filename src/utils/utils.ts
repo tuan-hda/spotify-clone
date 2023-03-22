@@ -1,3 +1,5 @@
+import SpotifyWebApi from 'spotify-web-api-node'
+
 export const getCodeFromUrl = () => {
   const code = new URLSearchParams(window.location.search).get('code')
 
@@ -50,5 +52,31 @@ export const convertMsToTime = (ms: number) => {
 }
 
 export const convertToC = (a = 0, b = 1, d = 1) => {
-  return (a / b) * d
+  return Math.min((a / b) * d, d)
+}
+
+export const next = async (
+  playbackState: Spotify.PlaybackState | null,
+  spotifyApi: SpotifyWebApi,
+  device_id: string,
+  player: Spotify.Player | null
+) => {
+  if (playbackState?.track_window.next_tracks.length === 0) {
+    const oldTracks = [...playbackState.track_window.previous_tracks, playbackState.track_window.current_track]
+
+    const res = await spotifyApi.getRecommendations({
+      seed_tracks: [...oldTracks.map((track) => track.id || '')],
+      limit: 1
+    })
+
+    await spotifyApi.play({
+      device_id,
+      uris: [...oldTracks.map((track) => track.uri), res.body.tracks[0].uri],
+      offset: {
+        position: oldTracks.length
+      }
+    })
+  } else {
+    await player?.nextTrack()
+  }
 }

@@ -64,15 +64,13 @@ const Search = () => {
               <NotFound />
             ) : (
               <>
-                <div className='sticky top-16 z-[1] -mx-4 bg-s-black-3 py-2 px-4 lg:-mx-8 lg:px-8'>
+                <div className='sticky top-16 z-[1] -mx-4 bg-s-black-3 px-4 pt-2 lg:-mx-8 lg:px-8'>
                   <Tabs />
                 </div>
                 <div className='h-2' />
-                {
-                  <Suspense fallback={<div />}>
-                    <Outlet />
-                  </Suspense>
-                }
+                <Suspense fallback={<div />}>
+                  <Outlet />
+                </Suspense>
               </>
             )}
           </>
