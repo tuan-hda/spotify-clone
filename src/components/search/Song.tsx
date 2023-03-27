@@ -33,35 +33,29 @@ const Song = ({ track, index, paddingLeft, paddingRight, hideAlbum }: Props) => 
     else await player?.togglePlay()
   }
 
-  const isPlaying = () => {
+  const isCurrentPlaying = () => {
     return playbackState && !playbackState.paused && playbackState?.track_window.current_track.id === track.id
+  }
+
+  const getPlayTooltipContent = () => {
+    let result = ` ${track.name} by ${track.artists.map((artist) => artist.name).join(', ')}`
+    if (isCurrentPlaying()) result = 'Pause ' + result
+    else result = 'Play ' + result
+    return result
   }
 
   const ToggleButton = ({ disableToggle }: { disableToggle?: boolean }) => {
     let Element = MdPlayArrow
-    if (isPlaying()) Element = MdOutlinePause
+    if (isCurrentPlaying()) Element = MdOutlinePause
     return (
       <Element
         onClick={disableToggle ? undefined : play}
         className={classNames(
-          'hidden h-5 w-5 cursor-default text-white group-hover:block',
-          index ? 'top-4' : 'absolute'
+          'h-5 w-5 cursor-default text-white group-hover:block',
+          index ? 'top-4' : 'absolute',
+          isCurrentPlaying() ? 'block' : 'hidden'
         )}
       />
-    )
-  }
-
-  const ImageWrapper = ({ children }: { children: React.ReactNode }) => {
-    if (index) return <>{children}</>
-    return (
-      <CustomTooltip
-        content={`${isPlaying() ? 'Pause' : 'Play'} ${track.name} by ${track.artists
-          .map((artist) => artist.name)
-          .join(', ')}`}
-        arrow={false}
-      >
-        {children}
-      </CustomTooltip>
     )
   }
 
@@ -70,25 +64,29 @@ const Song = ({ track, index, paddingLeft, paddingRight, hideAlbum }: Props) => 
       key={track.id}
       className={classNames(
         'group relative grid cursor-default grid-cols-12 rounded py-[6px] px-2',
-        isPlaying() ? 'bg-s-gray-13' : 'hover:bg-s-gray-9'
+        isCurrentPlaying() ? 'bg-s-gray-13' : 'hover:bg-s-gray-9'
       )}
       style={{ paddingLeft, paddingRight }}
     >
       <div className='col-span-7 flex flex-shrink-0 items-center gap-[14px]'>
         {index && (
           <div className='w-5'>
-            <p className='text-center text-base text-s-gray-7 group-hover:hidden'>{index}</p>
-            <CustomTooltip
-              content={`Play ${track.name} by ${track.artists.map((artist) => artist.name).join(', ')}`}
-              arrow={false}
+            <p
+              className={classNames(
+                'text-center text-base text-s-gray-7 group-hover:hidden',
+                isCurrentPlaying() && 'hidden'
+              )}
             >
+              {index}
+            </p>
+            <CustomTooltip content={getPlayTooltipContent()}>
               <ToggleButton />
             </CustomTooltip>
           </div>
         )}
 
         {/* Image */}
-        <ImageWrapper>
+        <CustomTooltip raw={index} content={getPlayTooltipContent()}>
           <div
             className='flex h-10 w-10 flex-shrink-0 cursor-default items-center justify-center'
             role='presentation'
@@ -101,10 +99,10 @@ const Song = ({ track, index, paddingLeft, paddingRight, hideAlbum }: Props) => 
             />
             {!index && <ToggleButton disableToggle />}
           </div>
-        </ImageWrapper>
+        </CustomTooltip>
 
         <div className='min-w-0 flex-1'>
-          <h4 className={classNames('ellipsis text-base', isPlaying() && 'text-s-green-1')}>{track.name}</h4>
+          <h4 className={classNames('ellipsis text-base', isCurrentPlaying() && 'text-s-green-1')}>{track.name}</h4>
           <p className='ellipsis'>
             {track.artists.map((artist, index) => (
               <ArtistCredit disableColorChange={false} artist={artist} index={index} key={artist.id} />
@@ -113,6 +111,7 @@ const Song = ({ track, index, paddingLeft, paddingRight, hideAlbum }: Props) => 
         </div>
       </div>
 
+      {/* Name, Album & Duration */}
       <div className='col-span-5 flex items-center'>
         <span className={classNames('ellipsis hidden text-s-gray-7 group-hover:text-white', !hideAlbum && 'lg:inline')}>
           {track.album.name}

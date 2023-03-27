@@ -5,20 +5,14 @@ import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import { Suspense, useState } from 'react'
 import { Tabs } from '~/components/search'
 import Categories from '~/components/list/Categories'
-import useSWR from 'swr'
-import { useSpotifyStore } from '~/store/spotify'
 import NotFound from '~/components/search/NotFound'
+import { useSearch } from '~/hooks'
 
 const Search = () => {
   const { value } = useParams()
   const [search, setSearch] = useState(value ?? '')
-  const spotifyApi = useSpotifyStore((state) => state.spotifyApi)
   const navigate = useNavigate()
-  const { data } = useSWR(
-    value ? ['/search', value] : null,
-    async ([, value]) => spotifyApi.search(value, ['album', 'artist', 'playlist', 'track']),
-    { suspense: false }
-  )
+  const { isNotFound } = useSearch(value)
 
   const updateUrl = useDebouncedCallback((value) => {
     if (!value) navigate('/search')
@@ -54,23 +48,22 @@ const Search = () => {
         {search && <Close onClick={clear} className='absolute right-3' />}
       </div>
 
+      {/* Result */}
       <div className='px-4 lg:px-8'>
         {value && (
           <>
-            {data?.body.albums?.total === 0 &&
-            data?.body.playlists?.total === 0 &&
-            data?.body.tracks?.total === 0 &&
-            data?.body.artists?.total === 0 ? (
+            {isNotFound() ? (
               <NotFound />
             ) : (
               <>
-                <div className='sticky top-16 z-[1] -mx-4 bg-s-black-3 px-4 pt-2 lg:-mx-8 lg:px-8'>
+                <div className='sticky top-16 z-[1] -mx-4 bg-s-black-3 px-4 py-2 lg:-mx-8 lg:px-8'>
                   <Tabs />
                 </div>
-                <div className='h-2' />
-                <Suspense fallback={<div />}>
-                  <Outlet />
-                </Suspense>
+                <div className='min-h-[600px]'>
+                  <Suspense fallback={<></>}>
+                    <Outlet />
+                  </Suspense>
+                </div>
               </>
             )}
           </>

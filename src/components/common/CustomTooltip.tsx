@@ -1,9 +1,13 @@
 import classNames from 'classnames'
 import { Tooltip, TooltipProps } from 'flowbite-react'
 
-type Props = TooltipProps
+type Props = TooltipProps & {
+  raw?: boolean | number
+}
 
-const CustomTooltip = (props: Props) => {
+const CustomTooltip = ({ raw = false, ...props }: Props) => {
+  if (raw) return <>{props.children}</>
+
   return (
     <Tooltip
       {...props}
