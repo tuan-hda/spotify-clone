@@ -12,10 +12,22 @@ const AllResults = lazy(() => import('~/pages/AllResults'))
 const TypeResults = lazy(() => import('~/pages/TypeResults'))
 const SongResults = lazy(() => import('~/pages/SongResults'))
 
-export const paths = {
-  root: { path: '/', fallback: Fragment },
+interface Path {
+  path: string
+  fallback?:
+    | React.ExoticComponent<{
+        children?: React.ReactNode
+      }>
+    | (() => JSX.Element)
+  getTitle?: () => string
+}
+
+const APP_NAME = import.meta.env.VITE_APP_NAME || 'Spotify Clone'
+
+export const paths: { [key: string]: Path } = {
+  root: { path: '/', fallback: Fragment, getTitle: () => `${APP_NAME} - Web Player` },
   main: { path: '/', fallback: MainSkeleton },
-  search: { path: '/search' },
+  search: { path: '/search', getTitle: () => `${APP_NAME} - Search` },
   searchValue: { path: '/search/:value' },
   searchPlaylist: { path: '/search/:value/playlists' },
   searchAlbum: { path: '/search/:value/albums' },

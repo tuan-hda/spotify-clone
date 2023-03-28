@@ -73,7 +73,7 @@ const usePlayer = () => {
       return player
     }
 
-    if (!document.querySelector('script[src="https://sdk.scdn.co/spotify-player.js"]')) {
+    if (accessToken && !document.querySelector('script[src="https://sdk.scdn.co/spotify-player.js"]')) {
       const script = document.createElement('script')
       script.src = 'https://sdk.scdn.co/spotify-player.js'
       script.async = true

@@ -7,10 +7,18 @@ import { ReactComponent as Time } from '~/assets/icons/Time.svg'
 const SongResults = () => {
   const { value } = useParams()
   const spotifyApi = useSpotifyStore((state) => state.spotifyApi)
-  const { data } = useSWR(
+  const { data, isLoading } = useSWR(
     value ? ['/search-songs', value] : null,
     async ([, value]) => spotifyApi.searchTracks(value),
     { suspense: false }
+  )
+
+  const { data: savedTracks, mutate: mutateSavedTracks } = useSWR(
+    data?.body.tracks && data.body.tracks.total !== 0 && !isLoading ? ['/saved-tracks', data.body.tracks.items] : null,
+    async ([, tracks]) => {
+      const trackIds = tracks.map((track) => track.id)
+      return spotifyApi.containsMySavedTracks(trackIds)
+    }
   )
 
   return (
@@ -27,7 +35,15 @@ const SongResults = () => {
       </div>
       <div className='mt-4 px-8'>
         {data?.body.tracks?.items.map((track, index) => (
-          <Song paddingLeft='16px' paddingRight='16px' key={track.id} index={index + 1} track={track} />
+          <Song
+            paddingLeft='14px'
+            paddingRight='14px'
+            isSaved={savedTracks?.body[index]}
+            onSaveTrack={mutateSavedTracks}
+            key={track.id}
+            index={index + 1}
+            track={track}
+          />
         ))}
       </div>
     </div>

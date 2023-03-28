@@ -11,6 +11,7 @@ import Scrollbars from 'react-custom-scrollbars'
 import { useScrollPosition } from '~/store/scrollPosition'
 import getFallback from '~/utils/getFallback'
 import useScrollTop from '~/hooks/useScrollTop'
+import { useTitle } from '~/hooks'
 
 const MAX_WIDTH = 393
 const MIN_WIDTH = 150
@@ -22,14 +23,16 @@ export default function MainLayout() {
   const location = useLocation()
   useScrollTop()
 
-  const Fallback = getFallback(location.pathname)
-
+  // Custom hooks
   const { width, stopResize, startResize, onResize } = useResize(
     MIN_WIDTH,
     MAX_WIDTH,
     Number(localStorage.getItem('sidebar-width'))
   )
   useAuth()
+  useTitle()
+
+  const Fallback = getFallback(location.pathname)
 
   const handleScroll = useCallback(() => {
     setTop(ref.current?.getScrollTop() || 0)
