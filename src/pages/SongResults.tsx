@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom'
 import { useSpotifyStore } from '~/store/spotify'
 import useSWR from 'swr'
 import Song from '~/components/search/Song'
-import { ReactComponent as Time } from '~/assets/icons/Time.svg'
+import { ReactComponent as Time } from 'assets/icons/Time.svg'
 
 const SongResults = () => {
   const { value } = useParams()

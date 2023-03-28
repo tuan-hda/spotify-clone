@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import LogoImg from '~/assets/logo/Spotify_Logo_RGB_White.png'
+import LogoImg from 'assets/logo/Spotify_Logo_RGB_White.png'
 
 export default function Logo() {
   return (

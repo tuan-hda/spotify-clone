@@ -1,5 +1,5 @@
 import { useRouteError } from 'react-router-dom'
-import Logo from '~/assets/icons/Spotify_Icon_RGB_Green.png'
+import Logo from 'assets/icons/Spotify_Icon_RGB_Green.png'
 import { Button } from '~/components/common'
 
 const NotFound = () => {

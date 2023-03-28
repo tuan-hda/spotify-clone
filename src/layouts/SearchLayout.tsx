@@ -1,5 +1,5 @@
-import SearchIcon from '~/assets/icons/Search.png'
-import { ReactComponent as Close } from '~/assets/icons/Close.svg'
+import SearchIcon from 'assets/icons/Search.png'
+import { ReactComponent as Close } from 'assets/icons/Close.svg'
 import { useDebouncedCallback } from 'use-debounce'
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import { Suspense, useState } from 'react'

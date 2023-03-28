@@ -1,4 +1,4 @@
-import Like from '~/assets/icons/Like.png'
+import Like from 'assets/icons/Like.png'
 import { useSpotifyStore } from '~/store/spotify'
 import useImmutableSWR from 'swr/immutable'
 import { shallow } from 'zustand/shallow'

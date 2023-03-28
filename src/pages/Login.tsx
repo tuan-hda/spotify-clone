@@ -1,5 +1,5 @@
 import { Navigate } from 'react-router-dom'
-import SpotifyLogo from '~/assets/logo/Spotify_Logo_RGB_Green.png'
+import SpotifyLogo from 'assets/logo/Spotify_Logo_RGB_Green.png'
 import { Button } from '~/components/common'
 import { loginUrl } from '~/config/spotify'
 import { useSpotifyStore } from '~/store/spotify'

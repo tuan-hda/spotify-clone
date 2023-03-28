@@ -4,7 +4,7 @@ import { shallow } from 'zustand/shallow'
 import { useSpotifyStore } from '~/store/spotify'
 import { CustomTooltip } from '../common'
 import ArtistCredit from '../common/ArtistCredit'
-import Bars from '~/assets/icons/Bars.gif'
+import Bars from 'assets/icons/Bars.gif'
 import { useState } from 'react'
 import SongDescription from './SongDescription'
 

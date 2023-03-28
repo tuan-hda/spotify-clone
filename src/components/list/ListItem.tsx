@@ -5,7 +5,7 @@ import { useSpotifyStore } from '~/store/spotify'
 import { shallow } from 'zustand/shallow'
 import classNames from 'classnames'
 import ArtistCredit from '../common/ArtistCredit'
-import ViewArtist from '~/assets/icons/ViewArtist.png'
+import ViewArtist from 'assets/icons/ViewArtist.png'
 
 interface Props {
   item:

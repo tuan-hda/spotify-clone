@@ -5,7 +5,7 @@ import { rgbToHex } from '~/utils/utils'
 import { shallow } from 'zustand/shallow'
 import tinycolor from 'tinycolor2'
 import PlayButton from '../common/PlayButton'
-import ViewAlbum from '~/assets/icons/ViewAlbum.png'
+import ViewAlbum from 'assets/icons/ViewAlbum.png'
 
 interface Props extends SpotifyApi.SingleArtistResponse {
   isDefault?: boolean
