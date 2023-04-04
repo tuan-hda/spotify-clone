@@ -3,10 +3,25 @@ import TopResult from '../components/search/TopResult'
 import Song from '../components/search/Song'
 import OneLineList from '../components/search/OneLineList'
 import { useSearch } from '~/hooks'
+import { useState } from 'react'
+import useUnselectClickOutside from '~/hooks/useUnselectClickOutside'
+import useSWR from 'swr'
+import { useSpotifyStore } from '~/store/spotify'
 
 const SearchResult = () => {
   const { value } = useParams()
-  const { data, getTopResult } = useSearch(value)
+  const spotifyApi = useSpotifyStore((state) => state.spotifyApi)
+  const { data, isLoading, getTopResult } = useSearch(value)
+  const [selected, setSelected] = useState(-1)
+  const { ref } = useUnselectClickOutside(setSelected)
+
+  const { data: savedTracks, mutate: mutateSavedTracks } = useSWR(
+    data?.body.tracks && data.body.tracks.total !== 0 && !isLoading ? ['/saved-tracks', data.body.tracks.items] : null,
+    async ([, tracks]) => {
+      const trackIds = tracks.map((track) => track.id)
+      return spotifyApi.containsMySavedTracks(trackIds)
+    }
+  )
 
   if (!data) return null
 
@@ -21,9 +36,20 @@ const SearchResult = () => {
         </div>
         <div className='col-span-full xl:col-span-7'>
           <h2 className='mb-4 text-2xl font-bold tracking-tight'>Songs</h2>
-          {data.body.tracks?.items.slice(0, 4).map((track) => (
-            <Song hideAlbum key={track.id} track={track} />
-          ))}
+          <div ref={ref}>
+            {data.body.tracks?.items.slice(0, 4).map((track, index) => (
+              <Song
+                selected={selected}
+                setSelected={setSelected}
+                index={index}
+                hideAlbum
+                key={track.id}
+                isSaved={savedTracks?.body[index]}
+                onSaveTrack={mutateSavedTracks}
+                track={track}
+              />
+            ))}
+          </div>
         </div>
       </div>
 

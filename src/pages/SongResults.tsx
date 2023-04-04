@@ -3,10 +3,14 @@ import { useSpotifyStore } from '~/store/spotify'
 import useSWR from 'swr'
 import Song from '~/components/search/Song'
 import { ReactComponent as Time } from 'assets/icons/Time.svg'
+import { useState } from 'react'
+import useUnselectClickOutside from '~/hooks/useUnselectClickOutside'
 
 const SongResults = () => {
   const { value } = useParams()
   const spotifyApi = useSpotifyStore((state) => state.spotifyApi)
+  const [selected, setSelected] = useState(-1)
+  const { ref } = useUnselectClickOutside(setSelected)
   const { data, isLoading } = useSWR(
     value ? ['/search-songs', value] : null,
     async ([, value]) => spotifyApi.searchTracks(value),
@@ -33,16 +37,19 @@ const SongResults = () => {
           <Time className='ml-auto mr-7 fill-s-gray-7' />
         </div>
       </div>
-      <div className='mt-4 px-8'>
+      <div className='mx-8 mt-4' ref={ref}>
         {data?.body.tracks?.items.map((track, index) => (
           <Song
+            selected={selected}
+            setSelected={setSelected}
             paddingLeft='14px'
             paddingRight='14px'
             isSaved={savedTracks?.body[index]}
             onSaveTrack={mutateSavedTracks}
             key={track.id}
-            index={index + 1}
+            index={index}
             track={track}
+            isSongTab
           />
         ))}
       </div>

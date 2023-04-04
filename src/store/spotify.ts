@@ -24,6 +24,17 @@ interface Actions {
   setSpotifyPlayer: (player: Spotify.Player) => void
   setDeviceId: (deviceId: string) => void
   setPlaybackState: (playbackState: Spotify.PlaybackState) => void
+  clearSession: () => void
+}
+
+const defaultState: State = {
+  accessToken: '',
+  spotifyApi: new SpotifyWebApi({
+    clientId: import.meta.env.VITE_CLIENT_ID
+  }),
+  spotifyPlayer: null,
+  deviceId: '',
+  playbackState: null
 }
 
 export const useSpotifyStore = create<State & Actions>()(
@@ -58,6 +69,9 @@ export const useSpotifyStore = create<State & Actions>()(
           set((state) => {
             state.playbackState = playbackState
           })
+        },
+        clearSession: () => {
+          set(defaultState)
         }
       }),
       {

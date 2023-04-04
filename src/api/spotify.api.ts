@@ -9,4 +9,6 @@ export const getTokens = (code: string) =>
     code
   })
 
-export const getNewAccessToken = () => https.post<AccessToken>('/refresh')
+export const getNewAccessToken = () => https.post<AccessToken>('/refresh', {}, { withCredentials: true })
+
+export const logout = () => https.post('/logout')

@@ -7,9 +7,10 @@ interface Props {
   artist: SpotifyApi.ArtistObjectSimplified | Spotify.Entity
   index: number
   disableColorChange?: boolean
+  isSelected?: boolean
 }
 
-const ArtistCredit = ({ artist, index, disableColorChange = true }: Props) => {
+const ArtistCredit = ({ artist, index, disableColorChange = true, isSelected = false }: Props) => {
   const getArtistId = () => {
     if ('type' in artist) return artist.id
     return extractId(artist.uri)
@@ -20,7 +21,11 @@ const ArtistCredit = ({ artist, index, disableColorChange = true }: Props) => {
       {index > 0 && ', '}
       <CustomLink
         to={`/artist/${getArtistId()}`}
-        className={classNames('text-s-gray-8 hover:underline', !disableColorChange && 'group-hover:text-white')}
+        className={classNames(
+          'hover:underline',
+          !disableColorChange && 'group-hover:text-white',
+          isSelected ? 'text-white' : 'text-s-gray-8'
+        )}
       >
         {artist.name}
       </CustomLink>
