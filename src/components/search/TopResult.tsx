@@ -52,6 +52,13 @@ const TopResult = ({ item, artists }: Props) => {
     }
   }
 
+  const nameLink = () => {
+    if (item.type === 'album') return '/album/' + item.id
+    else if (item.type === 'track') return '/album/' + item.album.id
+    else if (item.type === 'playlist') return '/playlist/' + item.id
+    else return '/artist/' + item.id
+  }
+
   return (
     <div className='group relative cursor-pointer rounded-md bg-s-black-4 p-5 transition duration-300 hover:bg-s-gray-2'>
       <div>
@@ -70,7 +77,7 @@ const TopResult = ({ item, artists }: Props) => {
           )}
         />
       </div>
-      <CustomLink to={`/album/${item.id}`} className='mt-4 block text-base font-bold'>
+      <CustomLink to={nameLink()} className='mt-4 block text-base font-bold'>
         <abbr
           title={item.name}
           className='ellipsis leading block text-3xl leading-[56px] tracking-[-0.2px] no-underline'

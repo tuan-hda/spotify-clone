@@ -3,7 +3,6 @@ import { CustomTooltip } from '../common'
 import { HiDotsHorizontal } from 'react-icons/hi'
 import Like from 'assets/icons/Like.png'
 import LikeFill from 'assets/icons/LikeFill.png'
-import { useState } from 'react'
 import { convertMsToTime } from '~/utils/utils'
 import { useSpotifyStore } from '~/store/spotify'
 
@@ -15,7 +14,6 @@ interface Props {
 }
 
 const SongDescription = ({ track, isSaved, hideAlbum, onSaveTrack }: Props) => {
-  const [loading, setLoading] = useState<boolean>(false)
   const spotifyApi = useSpotifyStore((state) => state.spotifyApi)
   const duration = convertMsToTime(track.duration_ms)
 
@@ -25,9 +23,7 @@ const SongDescription = ({ track, isSaved, hideAlbum, onSaveTrack }: Props) => {
   }
 
   const saveTrack = async () => {
-    if (loading) return
     try {
-      setLoading(true)
       if (isSaved) {
         await spotifyApi.removeFromMySavedTracks([track.id])
       } else {
@@ -35,8 +31,6 @@ const SongDescription = ({ track, isSaved, hideAlbum, onSaveTrack }: Props) => {
       }
     } catch (error) {
       console.log(error)
-    } finally {
-      setLoading(false)
     }
     onSaveTrack && onSaveTrack()
   }
@@ -54,9 +48,8 @@ const SongDescription = ({ track, isSaved, hideAlbum, onSaveTrack }: Props) => {
         <button
           onClick={saveTrack}
           className={classNames(
-            'mt-1 min-w-[18px] hover:brightness-100 group-hover:opacity-100',
-            !isSaved && 'opacity-0 brightness-75',
-            loading ? 'cursor-wait' : 'cursor-default'
+            'mt-1 min-w-[18px] cursor-default hover:brightness-100 group-hover:opacity-100',
+            !isSaved && 'opacity-0 brightness-75'
           )}
         >
           <img src={isSaved ? LikeFill : Like} alt={getSaveTooltipContent()} className='h-[15px]' />

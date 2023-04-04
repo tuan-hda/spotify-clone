@@ -4,7 +4,7 @@ import useSWR from 'swr'
 const useSearch = (value: string | undefined) => {
   const spotifyApi = useSpotifyStore((state) => state.spotifyApi)
 
-  const { data } = useSWR(
+  const { data, isLoading } = useSWR(
     value ? ['/search', value] : null,
     async ([, value]) => spotifyApi.search(value, ['album', 'artist', 'playlist', 'track']),
     { suspense: false }
@@ -24,7 +24,7 @@ const useSearch = (value: string | undefined) => {
     if (data.body.artists?.total && data.body.artists?.total > 0) return data?.body.artists?.items[0]
   }
 
-  return { data, isNotFound, getTopResult }
+  return { data, isLoading, isNotFound, getTopResult }
 }
 
 export default useSearch

@@ -11,6 +11,8 @@ import DefaultAvatar from 'assets/img/default_avatar.png'
 import { CustomTooltip } from '../common'
 import { matchPath, useLocation } from 'react-router-dom'
 import { paths } from '~/config/routes'
+import { default as Popup } from 'reactjs-popup'
+import Menu from './Menu'
 
 const Header = () => {
   const spotifyApi = useSpotifyStore((state) => state.spotifyApi)
@@ -54,8 +56,41 @@ const Header = () => {
 
         <div className='m-auto' />
 
-        <CustomTooltip content={user?.body.display_name}>
-          <button className='pointer-events-auto ml-auto flex h-8 w-fit max-w-[180px] items-center gap-[6px] rounded-full bg-black bg-opacity-90 hover:bg-s-gray-2'>
+        <Popup
+          trigger={
+            <div>
+              <CustomTooltip content={user?.body.display_name}>
+                <button
+                  data-dropdown-toggle='dropdown'
+                  className='pointer-events-auto ml-auto flex h-8 w-fit max-w-[180px] items-center gap-[6px] rounded-full bg-black bg-opacity-90 hover:bg-s-gray-2'
+                >
+                  <img
+                    src={user?.body?.images?.at(0)?.url || DefaultAvatar}
+                    alt='User Avatar'
+                    loading='lazy'
+                    className='aspect-square h-full flex-shrink-0 rounded-full p-0.5'
+                  />
+                  <span className='hidden overflow-hidden text-ellipsis whitespace-nowrap font-bold xl:inline'>
+                    {user?.body?.display_name}
+                  </span>
+                  <AiFillCaretDown className='ml-auto mr-1 hidden w-6 text-white xl:inline' />
+                </button>
+              </CustomTooltip>
+            </div>
+          }
+          position='bottom right'
+          on='click'
+          closeOnDocumentClick
+          contentStyle={{ padding: '0px', border: 'none', background: 'transparent', boxShadow: 'none' }}
+          arrow={false}
+        >
+          <Menu />
+        </Popup>
+        {/* <CustomTooltip content={user?.body.display_name}>
+          <button
+            data-dropdown-toggle='dropdown'
+            className='pointer-events-auto ml-auto flex h-8 w-fit max-w-[180px] items-center gap-[6px] rounded-full bg-black bg-opacity-90 hover:bg-s-gray-2'
+          >
             <img
               src={user?.body?.images?.at(0)?.url || DefaultAvatar}
               alt='User Avatar'
@@ -67,7 +102,7 @@ const Header = () => {
             </span>
             <AiFillCaretDown className='ml-auto mr-1 hidden w-6 text-white xl:inline' />
           </button>
-        </CustomTooltip>
+        </CustomTooltip> */}
       </header>
     </div>
   )

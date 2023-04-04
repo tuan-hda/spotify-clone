@@ -14,7 +14,7 @@ interface TabItemProps {
 const TabItem = ({ to, label }: TabItemProps) => {
   const { pathname } = useResolvedPath(to)
   const match = useMatch({
-    path: pathname,
+    path: encodeURI(pathname),
     end: true
   })
 
