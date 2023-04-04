@@ -4,6 +4,8 @@ import Icons from '~/components/common/Icons'
 import Logo from './Logo'
 import Playlist from './Playlist'
 import { CustomLink } from '~/components/common'
+import useSWR from 'swr'
+import { useSpotifyStore } from '~/store/spotify'
 
 interface Props {
   width?: number
@@ -11,8 +13,16 @@ interface Props {
 }
 
 export default function Sidebar({ width = 393, maxWidth = 393 }: Props) {
+  const spotifyApi = useSpotifyStore((state) => state.spotifyApi)
+  const { mutate } = useSWR('/get-current-user-playlists', async () => spotifyApi.getUserPlaylists())
+
+  const createPlaylist = async () => {
+    await spotifyApi.createPlaylist('New Playlist')
+    mutate()
+  }
+
   return (
-    <nav className='scrollbar-hidden overflow-auto bg-black py-6 text-sm text-s-gray-1' style={{ width, maxWidth }}>
+    <nav className='scrollbar-hidden flex flex-col bg-black pt-6 text-sm text-s-gray-1' style={{ width, maxWidth }}>
       <Logo />
       <div className='mt-4 px-2'>
         <IconButton className='px-4' as={CustomLink} to='/' iconType='home'>
@@ -35,6 +45,7 @@ export default function Sidebar({ width = 393, maxWidth = 393 }: Props) {
               <Icons className='m-auto' type='plus' />
             </div>
           }
+          onClick={createPlaylist}
         >
           Create Playlist
         </IconButton>
@@ -52,7 +63,8 @@ export default function Sidebar({ width = 393, maxWidth = 393 }: Props) {
         </IconButton>
       </div>
 
-      <Divider className='mx-6 my-2' />
+      <Divider className='mx-6 mt-2' />
+
       <Playlist />
     </nav>
   )

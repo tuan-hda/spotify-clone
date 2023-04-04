@@ -4,22 +4,19 @@ import Header from '~/components/header'
 import useResize from '~/hooks/useResize'
 import { useSpotifyStore } from '~/store/spotify'
 import useAuth from '~/hooks/useAuth'
-import { Suspense, useCallback, useEffect, useRef } from 'react'
+import { Suspense, useEffect } from 'react'
 import Player from '~/components/player'
 import { shallow } from 'zustand/shallow'
-import Scrollbars from 'react-custom-scrollbars'
-import { useScrollPosition } from '~/store/scrollPosition'
 import getFallback from '~/utils/getFallback'
 import useScrollTop from '~/hooks/useScrollTop'
 import { useTitle } from '~/hooks'
+import ScrollView from '~/components/common/ScrollView'
 
 const MAX_WIDTH = 393
 const MIN_WIDTH = 150
 
 export default function MainLayout() {
   const [accessToken, spotifyPlayer] = useSpotifyStore((state) => [state.accessToken, state.spotifyPlayer], shallow)
-  const ref = useRef<Scrollbars>(null)
-  const setTop = useScrollPosition((state) => state.setTop)
   const location = useLocation()
   useScrollTop()
 
@@ -33,10 +30,6 @@ export default function MainLayout() {
   useTitle()
 
   const Fallback = getFallback(location.pathname)
-
-  const handleScroll = useCallback(() => {
-    setTop(ref.current?.getScrollTop() || 0)
-  }, [setTop])
 
   useEffect(() => {
     const onKeyDown: (this: Document, ev: KeyboardEvent) => void = (e) => {
@@ -81,22 +74,12 @@ export default function MainLayout() {
               </Suspense>
 
               <Suspense fallback={<Fallback />}>
-                <Scrollbars
-                  onScroll={handleScroll}
-                  ref={ref}
-                  className='custom-scrollbar-container -top-16'
-                  renderThumbVertical={({ ...props }) => (
-                    <div
-                      {...props}
-                      className='custom-scrollbar bg-[#a6a6a6] bg-opacity-50 hover:bg-[#ffffff] hover:bg-opacity-50'
-                    />
-                  )}
-                >
+                <ScrollView className='-top-16'>
                   <Outlet />
                   <div className='h-[220px] px-4 pt-[88px] lg:px-8'>
                     <div className='border-t border-s-gray-9' />
                   </div>
-                </Scrollbars>
+                </ScrollView>
               </Suspense>
             </div>
           </div>

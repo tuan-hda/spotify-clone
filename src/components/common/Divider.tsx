@@ -5,7 +5,7 @@ interface Props {
 }
 
 const Divider = ({ className }: Props) => {
-  return <hr className={classNames('border-s-gray-2', className)} />
+  return <div className={classNames('border-t border-s-gray-2', className)} />
 }
 
 export default Divider

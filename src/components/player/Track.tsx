@@ -23,14 +23,11 @@ const Track = () => {
         alt='Current Track'
       />
 
-      <div>
-        <CustomLink
-          to={`/album/${track.id}`}
-          className='overflow-hidden text-ellipsis whitespace-nowrap text-sm text-white hover:underline'
-        >
+      <div className='ellipsis min-w-0 text-white'>
+        <CustomLink to={`/album/${track.id}`} className='text-sm text-white hover:underline'>
           {track.name}
         </CustomLink>
-        <p className='group overflow-hidden text-ellipsis whitespace-nowrap text-ss font-light text-s-gray-5'>
+        <p className='group text-ss font-light text-s-gray-5'>
           {track.artists.map((artist, index) => {
             return <ArtistCredit artist={artist} index={index} key={artist.uri} />
           })}
