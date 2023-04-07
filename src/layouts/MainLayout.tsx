@@ -68,7 +68,7 @@ export default function MainLayout() {
               <div className='m-auto h-full border-[#4C4C4C] group-hover:border-r' />
             </div>
 
-            <div className='relative flex-1 flex-shrink bg-s-black-3'>
+            <div id='main-container' className='relative flex-1 flex-shrink bg-s-black-3'>
               <Suspense fallback={<div className='h-16 bg-black' />}>
                 <Header />
               </Suspense>
@@ -76,6 +76,8 @@ export default function MainLayout() {
               <Suspense fallback={<Fallback />}>
                 <ScrollView className='-top-16'>
                   <Outlet />
+
+                  {/* End divider */}
                   <div className='h-[220px] px-4 pt-[88px] lg:px-8'>
                     <div className='border-t border-s-gray-9' />
                   </div>

@@ -1,14 +1,40 @@
 import { ReactComponent as PlaylistSvg } from 'assets/icons/Playlist.svg'
 import { ReactComponent as EditSvg } from 'assets/icons/Edit.svg'
-import { CustomLink, CustomTooltip, Divider, Menu } from '~/components/common'
+import { CustomLink } from '~/components/common'
 import FallbackUserImg from 'assets/icons/User.png'
-import { HiDotsHorizontal } from 'react-icons/hi'
-import { default as Popup } from 'reactjs-popup'
 import { useState } from 'react'
+import useSWR from 'swr'
+import { useParams } from 'react-router-dom'
+import { useSpotifyStore } from '~/store/spotify'
+import classNames from 'classnames'
+import { PlaylistDetail } from '~/components/playlist'
+import { convertMsToTotalTime } from '~/utils/utils'
 
 const Playlist = () => {
-  const menuItems = ['Go to playlist radio', 'Remove from profile', 'Delete', 'About recommendations']
+  const spotifyApi = useSpotifyStore((state) => state.spotifyApi)
+  const { playlistId } = useParams()
+  const { data } = useSWR(playlistId ? ['/get-playlist', playlistId] : null, async ([, id]) =>
+    spotifyApi.getPlaylist(id || '')
+  )
   const [hover, setHover] = useState(false)
+  // const [ref, setRef] = useState<HTMLDivElement | null>(null)
+
+  console.log(data?.body)
+
+  const image = data?.body.images[0]?.url
+  const totalTrack = data?.body.tracks.total || 0
+  const totalDuration = data?.body.tracks.items.reduce((prev, curr) => prev + (curr.track?.duration_ms || 0), 0) || 0
+
+  // const getFontSize = () => {
+  //   const width = ref?.clientWidth || 0
+  //   const fontSize = width / 0.625 / (data?.body.name.length || 1)
+  //   return Math.min(fontSize, 96)
+  // }
+
+  // useEffect(() => {
+  //   const element = document.querySelector('#main-container') as HTMLDivElement
+  //   setRef(element)
+  // }, [])
 
   return (
     <>
@@ -17,22 +43,29 @@ const Playlist = () => {
         <div
           onMouseEnter={() => setHover(true)}
           onMouseLeave={() => setHover(false)}
-          className='mx-8 flex h-[192px] w-[192px] flex-col items-center justify-center gap-2 bg-s-gray-2 shadow-s-5 xl:h-[232px] xl:w-[232px]'
+          className='relative ml-8 h-[192px] w-[192px] gap-2 shadow-s-5 xl:h-[232px] xl:w-[232px]'
         >
-          {hover ? (
-            <>
-              <EditSvg height='50px' width='50px' fill='#fff' />
-              <p className='text-base text-white'>Choose photo</p>
-            </>
-          ) : (
-            <PlaylistSvg fill='#757575' height='64px' width='64px' />
-          )}
+          {image && <img src={image} alt={data.body.name} className='h-full w-full object-cover' />}
+          <div
+            className={classNames('absolute top-0 left-0 flex h-full w-full flex-col items-center justify-center', {
+              'bg-black/70': hover && image,
+              'bg-s-gray-2': !image
+            })}
+          >
+            {hover && (
+              <>
+                <EditSvg height='50px' width='50px' fill='#fff' />
+                <p className='text-base text-white'>Choose photo</p>
+              </>
+            )}
+            {!hover && !image && <PlaylistSvg fill='#757575' height='64px' width='64px' />}
+          </div>
         </div>
 
         {/* Description */}
         <div className='ml-6'>
           <p className='text-sm font-black text-white'>Playlist</p>
-          <h1 className='mt-4 text-8xl font-bold tracking-tighter text-white'>New Playlist</h1>
+          <h1 className='mt-4 font-bold tracking-tighter text-white'>{data?.body.name}</h1>
           <div className='mt-5 flex items-center gap-1'>
             {/* Avatar */}
             <img
@@ -46,42 +79,18 @@ const Playlist = () => {
             <CustomLink to='#' className='font-bold text-white hover:underline'>
               Hoàng Đình Anh Tuấn
             </CustomLink>
+
+            {totalTrack > 0 && (
+              <>
+                • {totalTrack} songs,
+                <span className='opacity-70'>{convertMsToTotalTime(totalDuration)}</span>
+              </>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Body */}
-      <div className='h-[232px] w-[calc(100%+64px)] bg-gradient-to-b from-[#212121] to-s-black-3 px-8'>
-        <div className='h-5' />
-
-        <Popup
-          position='bottom left'
-          keepTooltipInside
-          closeOnDocumentClick
-          repositionOnResize
-          trigger={
-            <div className='w-fit'>
-              <CustomTooltip content='More options for New Playlist'>
-                <button className='cursor-default py-1 outline-0 brightness-50 hover:brightness-100'>
-                  <HiDotsHorizontal className='h-6 w-6' />
-                </button>
-              </CustomTooltip>
-            </div>
-          }
-          contentStyle={{
-            marginLeft: '-4px',
-            marginTop: '-8px',
-            background: 'transparent',
-            border: 0,
-            boxShadow: 'none'
-          }}
-          arrow={false}
-          on='click'
-        >
-          <Menu items={menuItems} />
-        </Popup>
-        <Divider className='mt-12 bg-black' />
-      </div>
+      <PlaylistDetail />
     </>
   )
 }
