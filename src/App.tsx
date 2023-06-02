@@ -32,7 +32,8 @@ export default function App() {
 
           await refreshToken()
           revalidate({ retryCount })
-        }
+        },
+        revalidateOnFocus: false
       }}
     >
       <Suspense fallback={<div className='h-screen w-screen bg-black'></div>}>

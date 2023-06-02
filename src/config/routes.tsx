@@ -12,6 +12,8 @@ const AllResults = lazy(() => import('~/pages/AllResults'))
 const TypeResults = lazy(() => import('~/pages/TypeResults'))
 const SongResults = lazy(() => import('~/pages/SongResults'))
 const Playlist = lazy(() => import('~/pages/Playlist'))
+const YourLibrary = lazy(() => import('~/pages/YourLibrary'))
+const LikedSongs = lazy(() => import('~/pages/LikedSongs'))
 
 interface Path {
   path: string
@@ -36,7 +38,9 @@ export const paths: { [key: string]: Path } = {
   searchArtist: { path: '/search/:value/artists' },
   section: { path: '/section/:section', fallback: SectionSkeleton },
   login: { path: '/login', fallback: Fragment },
-  playlist: { path: '/playlist/:playlistId' }
+  playlist: { path: '/playlist/:playlistId' },
+  library: { path: '/collection/playlists' },
+  tracks: { path: '/collection/tracks', fallback: Fragment }
 }
 
 export const searchPaths = [
@@ -60,6 +64,8 @@ const routes = (
       </Route>
       <Route path={paths.section.path} element={<Section />} />
       <Route path={paths.playlist.path} element={<Playlist />} />
+      <Route path={paths.library.path} element={<YourLibrary />} />
+      <Route path={paths.tracks.path} element={<LikedSongs />} />
     </Route>
     <Route path={paths.login.path} element={<Login />} />
   </Route>

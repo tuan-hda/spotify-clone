@@ -1,7 +1,9 @@
 import classNames from 'classnames'
 import { Fragment } from 'react'
+import MenuItem from './MenuItem'
+import ScrollView from './ScrollView'
 
-type CustomReactNode =
+export type CustomReactNode =
   | number
   | boolean
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -14,25 +16,33 @@ type CustomReactNode =
 interface Props {
   items?: string[] | CustomReactNode[]
   dividerIndexes?: number[]
+  scroll?: boolean
 }
 
-const Menu = ({ items, dividerIndexes }: Props) => {
+type WrapperProps = { scroll?: boolean; children?: React.ReactNode }
+
+const Menu = ({ items, scroll = false, dividerIndexes }: Props) => {
+  const Wrapper = ({ scroll = false, children }: WrapperProps) => {
+    if (scroll)
+      return (
+        <div className='h-[400px]'>
+          <ScrollView disableScrollSideEffect>{children}</ScrollView>
+        </div>
+      )
+    return <>{children}</>
+  }
+
   return (
-    <ul className='mt-2 rounded bg-s-gray-2 p-1 text-sm shadow-s-4'>
-      {items?.map((item, index) => (
-        <Fragment key={index}>
-          <li
-            className={classNames(
-              'rounded-sm bg-s-gray-2 text-white/90 hover:bg-s-gray-14 hover:text-white',
-              typeof item === 'string' && 'p-[10px]'
-            )}
-          >
-            {item}
-          </li>
-          {dividerIndexes?.includes(index) && <div className='border-t border-s-gray-14' />}
-        </Fragment>
-      ))}
-    </ul>
+    <Wrapper scroll={scroll}>
+      <ul className='mt-2 rounded bg-s-gray-2 p-1 text-sm shadow-s-4'>
+        {items?.map((item, index) => (
+          <Fragment key={index}>
+            <MenuItem item={item} />
+            {dividerIndexes?.includes(index) && <div className='border-t border-s-gray-14' />}
+          </Fragment>
+        ))}
+      </ul>
+    </Wrapper>
   )
 }
 

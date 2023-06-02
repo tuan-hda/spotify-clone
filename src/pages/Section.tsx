@@ -21,7 +21,12 @@ const Section = () => {
           <h1 className='text-2xl font-bold tracking-tight text-white'>{getTitle(section)}</h1>
         </header>
 
-        <div className='mt-5 grid grid-cols-5 gap-6 overflow-hidden'>
+        <div
+          className='mt-5 grid gap-6 overflow-hidden'
+          style={{
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))'
+          }}
+        >
           {data?.body.items
             .map((item, index) => mapFn(data.body.items, item, index))
             .map((item) => {

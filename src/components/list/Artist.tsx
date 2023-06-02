@@ -6,17 +6,20 @@ import { shallow } from 'zustand/shallow'
 import tinycolor from 'tinycolor2'
 import PlayButton from '../common/PlayButton'
 import ViewAlbum from 'assets/icons/ViewAlbum.png'
+import { useSpotifyStore } from '~/store/spotify'
 
 interface Props extends SpotifyApi.SingleArtistResponse {
   isDefault?: boolean
 }
 
-const Artist = ({ images, name, isDefault = false }: Props) => {
+const Artist = ({ isDefault = false, ...props }: Props) => {
+  const { images, name } = props
   const [dominantColor, setDominantColor] = useState<string>('#000')
   const [setDashboardStartColor, setDefaultStartColor] = useStyleStore(
     (state) => [state.setDashboardStartColor, state.setDefaultStartColor],
     shallow
   )
+  const [play] = useSpotifyStore((state) => [state.play], shallow)
   const ref = useRef<HTMLImageElement | null>(null)
 
   const onMouseEnter = useCallback(() => {
@@ -61,7 +64,7 @@ const Artist = ({ images, name, isDefault = false }: Props) => {
       />
       <p className='text-base font-bold'>{name}</p>
 
-      <PlayButton className='ml-auto mr-4' />
+      <PlayButton onClick={() => play(props)} className='ml-auto mr-4' />
     </div>
   )
 }

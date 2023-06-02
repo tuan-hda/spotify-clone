@@ -16,7 +16,7 @@ const Categories = () => {
       {data?.body.categories.items.map((category, index) => (
         <CustomLink
           key={category.id}
-          to={`/genre/${category.id}`}
+          to='#'
           draggable='false'
           className='relative block aspect-square select-none overflow-hidden rounded-md p-4'
           style={{

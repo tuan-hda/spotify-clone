@@ -25,6 +25,13 @@ interface Actions {
   setDeviceId: (deviceId: string) => void
   setPlaybackState: (playbackState: Spotify.PlaybackState) => void
   clearSession: () => void
+  play: (
+    item:
+      | SpotifyApi.ArtistObjectFull
+      | SpotifyApi.AlbumObjectSimplified
+      | SpotifyApi.TrackObjectFull
+      | SpotifyApi.PlaylistObjectSimplified
+  ) => void
 }
 
 const defaultState: State = {
@@ -40,7 +47,7 @@ const defaultState: State = {
 export const useSpotifyStore = create<State & Actions>()(
   immer(
     persist(
-      (set) => ({
+      (set, get) => ({
         accessToken: '',
         spotifyApi: new SpotifyWebApi({
           clientId: import.meta.env.VITE_CLIENT_ID
@@ -72,6 +79,24 @@ export const useSpotifyStore = create<State & Actions>()(
         },
         clearSession: () => {
           set(defaultState)
+        },
+        play: (item) => {
+          const { spotifyApi, deviceId: device_id } = get()
+          if (!spotifyApi || !device_id) {
+            console.error('FAILED WHEN PLAY AN ITEM. EITHER SPOTIFY API OR DEVICE_ID IS NULL/UNDEFINED')
+
+            return
+          }
+          if (item.type === 'track')
+            spotifyApi.play({
+              device_id,
+              uris: [item.uri]
+            })
+          else
+            spotifyApi.play({
+              device_id,
+              context_uri: item.uri
+            })
         }
       }),
       {

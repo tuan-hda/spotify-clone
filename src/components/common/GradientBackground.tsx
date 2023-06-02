@@ -21,7 +21,7 @@ const GradientBackground = ({ children }: Props) => {
   )
 
   return (
-    <div className='gradient-transition h-[332px]' style={gradientFromStyle}>
+    <div className='gradient-transition min-h-[332px]' style={gradientFromStyle}>
       {children}
     </div>
   )

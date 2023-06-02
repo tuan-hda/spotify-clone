@@ -1,10 +1,11 @@
 import classNames from 'classnames'
 import { CustomTooltip } from '../common'
-import { HiDotsHorizontal } from 'react-icons/hi'
 import Like from 'assets/icons/Like.png'
 import LikeFill from 'assets/icons/LikeFill.png'
 import { convertMsToTime } from '~/utils/utils'
 import { useSpotifyStore } from '~/store/spotify'
+
+import SongMoreOptions from './SongMoreOptions'
 
 interface Props {
   track: SpotifyApi.TrackObjectFull
@@ -59,13 +60,7 @@ const SongDescription = ({ track, isSaved, hideAlbum, onSaveTrack }: Props) => {
       {/* Duration */}
       <span className='ml-8 w-8 text-s-gray-8'>{duration}</span>
 
-      <CustomTooltip
-        content={`More options for ${track.name} by ${track.album.artists.map((artist) => artist.name).join(', ')}`}
-      >
-        <button className='ml-3 mt-1 cursor-default opacity-0 group-hover:opacity-100'>
-          <HiDotsHorizontal className='text-lg' />
-        </button>
-      </CustomTooltip>
+      <SongMoreOptions />
     </div>
   )
 }

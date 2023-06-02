@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosError, isAxiosError } from 'axios'
 
 const https = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL || 'https://localhost:8888',
@@ -8,5 +8,16 @@ const https = axios.create({
 export const spotify = axios.create({
   baseURL: 'https://api.spotify.com/v1'
 })
+
+export const handleError = (error: unknown) => {
+  if (isAxiosError(error)) {
+    const axiosError = error as AxiosError
+    if (axiosError.response) {
+      console.log(axiosError.response.data)
+      console.log(axiosError.response.status)
+      console.log(axiosError.response.headers)
+    }
+  }
+}
 
 export default https

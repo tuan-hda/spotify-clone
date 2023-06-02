@@ -19,15 +19,29 @@ interface Props {
   itemRef?: HTMLDivElement | null
   releaseDate?: string | false
   owner?: string | false
+  shadowFallback?: boolean
 }
 
-const FallbackArtist = () => (
+const FallbackArtist = ({ shadowFallback }: { shadowFallback: boolean }) => (
   <div className='flex aspect-square rounded-full bg-s-gray-12 p-[52px]'>
-    <img src={ViewArtist} alt='Artist' className='m-auto aspect-square w-full shadow-s-4 brightness-[0.7]' />
+    <img
+      src={ViewArtist}
+      alt='Artist'
+      className={classNames('m-auto aspect-square w-full brightness-[0.7]', shadowFallback && ' shadow-s-4  ')}
+    />
   </div>
 )
 
-const ListItem = ({ item, artists, setRef, setMaxHeight, itemRef, releaseDate, owner }: Props) => {
+const ListItem = ({
+  shadowFallback = true,
+  item,
+  artists,
+  setRef,
+  setMaxHeight,
+  itemRef,
+  releaseDate,
+  owner
+}: Props) => {
   const [device_id, spotifyApi] = useSpotifyStore((state) => [state.deviceId, state.spotifyApi], shallow)
   const onRefChange = useCallback(
     (node: HTMLDivElement | null) => {
@@ -78,11 +92,11 @@ const ListItem = ({ item, artists, setRef, setMaxHeight, itemRef, releaseDate, o
             )}
           />
         ) : (
-          <FallbackArtist />
+          <FallbackArtist shadowFallback={shadowFallback} />
         )}
         <PlayButton onClick={play} className='absolute bottom-1 right-2 group-hover:-translate-y-2' />
       </div>
-      <CustomLink to={`/album/${item.id}`} className='mt-[18px] block text-base font-bold'>
+      <CustomLink to={`/playlist/${item.id}`} className='mt-[18px] block text-base font-bold'>
         <abbr title={item.name} className='ellipsis block no-underline'>
           {item.name}
         </abbr>

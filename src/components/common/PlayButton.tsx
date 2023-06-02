@@ -5,9 +5,11 @@ import { useSpotifyStore } from '~/store/spotify'
 
 type Props = JSX.IntrinsicElements['button'] & {
   isCurrentPlaying?: boolean | null
+  noDisappear?: boolean
+  size?: 'normal' | 'big'
 }
 
-const PlayButton = ({ isCurrentPlaying, ...props }: Props) => {
+const PlayButton = ({ isCurrentPlaying, noDisappear, size = 'normal', ...props }: Props) => {
   const spotifyPlayer = useSpotifyStore((state) => state.spotifyPlayer)
 
   const onClick: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
@@ -20,16 +22,22 @@ const PlayButton = ({ isCurrentPlaying, ...props }: Props) => {
       {...props}
       onClick={onClick}
       className={classNames(
-        'flex h-12 w-12 rounded-full bg-s-green-1 shadow-lg shadow-black/40 transition-all duration-300 hover:scale-105 hover:bg-s-green-6 hover:transition-none group-hover:opacity-100',
+        'flex rounded-full bg-s-green-1 shadow-lg shadow-black/40 transition-all duration-300 hover:scale-105 hover:bg-s-green-6 hover:transition-none group-hover:opacity-100',
         props.className,
-        !isCurrentPlaying && 'opacity-0'
+        {
+          'opacity-0': !isCurrentPlaying && !noDisappear
+        },
+        {
+          'h-12 w-12': size === 'normal',
+          'h-14 w-14': size === 'big'
+        }
       )}
     >
       {isCurrentPlaying ? (
-        <MdOutlinePause className='m-auto h-7 w-7 text-black' />
+        <MdOutlinePause className={classNames('m-auto text-black', size === 'normal' ? 'h-7 w-7' : 'h-8 w-8')} />
       ) : (
-        <BsFillPlayFill className='my-auto ml-[11px] h-7 w-7 text-black' />
-      )}{' '}
+        <BsFillPlayFill className={classNames('m-auto text-black', size === 'normal' ? 'h-7 w-7' : 'h-8 w-8')} />
+      )}
     </button>
   )
 }
