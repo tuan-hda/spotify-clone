@@ -13,8 +13,13 @@ export type CustomReactNode =
   | null
   | undefined
 
+export type Item = {
+  content?: string | CustomReactNode
+  action?: () => void
+}
+
 interface Props {
-  items?: string[] | CustomReactNode[]
+  items?: string[] | CustomReactNode[] | Item[]
   dividerIndexes?: number[]
   scroll?: boolean
 }
@@ -22,11 +27,31 @@ interface Props {
 type WrapperProps = { scroll?: boolean; children?: React.ReactNode }
 
 const Menu = ({ items, scroll = false, dividerIndexes }: Props) => {
+  const isItem = (item: string | CustomReactNode | Item): item is Item => {
+    return item !== null && item !== undefined && (item as Item).content !== undefined
+  }
+
+  const getItem = (item: string | CustomReactNode | Item) => {
+    if (isItem(item)) {
+      return {
+        content: item.content || '',
+        action: item.action || (() => 1)
+      }
+    }
+    return {
+      content: item,
+      action: () => 1
+    }
+  }
+
   const Wrapper = ({ scroll = false, children }: WrapperProps) => {
     if (scroll)
       return (
         <div className='h-[400px]'>
-          <ScrollView disableScrollSideEffect>{children}</ScrollView>
+          <ScrollView disableScrollSideEffect>
+            {children}
+            <div className='h-4' />
+          </ScrollView>
         </div>
       )
     return <>{children}</>
@@ -34,13 +59,16 @@ const Menu = ({ items, scroll = false, dividerIndexes }: Props) => {
 
   return (
     <Wrapper scroll={scroll}>
-      <ul className='mt-2 rounded bg-s-gray-2 p-1 text-sm shadow-s-4'>
-        {items?.map((item, index) => (
-          <Fragment key={index}>
-            <MenuItem item={item} />
-            {dividerIndexes?.includes(index) && <div className='border-t border-s-gray-14' />}
-          </Fragment>
-        ))}
+      <ul className='rounded bg-s-gray-2 p-1 text-sm shadow-s-4'>
+        {items?.map((item, index) => {
+          const { content, action } = getItem(item)
+          return (
+            <Fragment key={index}>
+              <MenuItem action={action} content={content} />
+              {dividerIndexes?.includes(index) && <div className='border-t border-s-gray-14' />}
+            </Fragment>
+          )
+        })}
       </ul>
     </Wrapper>
   )

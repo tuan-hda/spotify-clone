@@ -43,7 +43,7 @@ const SearchResult = () => {
                 setSelected={setSelected}
                 index={index}
                 hideAlbum
-                key={track.id}
+                key={track.id + index}
                 isSaved={savedTracks?.body[index]}
                 onSaveTrack={mutateSavedTracks}
                 track={track}

@@ -60,7 +60,11 @@ function PlaylistCover({ id, image, name, mutate }: Props) {
         type='file'
         className='hidden'
       />
-      {image && <img src={image} alt={name} className='h-full w-full object-cover' />}
+      {image && (
+        <>
+          <img src={image} alt={name} className='h-full w-full object-cover' />
+        </>
+      )}
 
       <button
         className={classNames(

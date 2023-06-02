@@ -37,7 +37,7 @@ const SongResults = () => {
             paddingRight='14px'
             isSaved={savedTracks?.body[index]}
             onSaveTrack={mutateSavedTracks}
-            key={track.id}
+            key={track.id + index}
             index={index}
             track={track}
             isSongTab

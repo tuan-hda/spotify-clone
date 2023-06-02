@@ -5,15 +5,16 @@ import Song from '../search/Song'
 import { useState } from 'react'
 import SongHeader from '../search/SongHeader'
 import PlaylistPopup from './PlaylistPopup'
+import { darken } from 'polished'
 
 type Props = {
   hideMenu?: boolean
-  startColor?: string
+  fromColor: string
   tracks?: (SpotifyApi.TrackObjectFull | null)[]
   play?: () => void
 }
 
-const PlaylistDetail = ({ play, tracks = [], hideMenu = false, startColor = '#121212' }: Props) => {
+const PlaylistDetail = ({ play, tracks = [], hideMenu = false, fromColor }: Props) => {
   const spotifyApi = useSpotifyStore((state) => state.spotifyApi)
   const [selected, setSelected] = useState(-1)
 
@@ -28,10 +29,10 @@ const PlaylistDetail = ({ play, tracks = [], hideMenu = false, startColor = '#12
   return (
     <div className='min-h-[232px] w-full  px-8'>
       <div
-        className='absolute -mx-8 h-[232px] w-full bg-gradient-to-b from-[#20173E] to-s-black-3'
+        className='absolute -mx-8 h-[232px] w-full bg-gradient-to-b to-s-black-3'
         style={{
-          '--tw-gradient-from': startColor,
-          '--tw-gradient-to': 'rgb(32 23 62 / 0)',
+          '--tw-gradient-from': darken(0.1, fromColor),
+          '--tw-gradient-to': '#121212',
           '--tw-gradient-stops': 'var(--tw-gradient-from), var(--tw-gradient-to)'
         }}
       />
@@ -57,7 +58,7 @@ const PlaylistDetail = ({ play, tracks = [], hideMenu = false, startColor = '#12
                     selected={selected}
                     setSelected={setSelected}
                     isSaved={savedTracks?.body[index]}
-                    key={track.id}
+                    key={track.id + index}
                     onSaveTrack={mutateSavedTracks}
                     index={index}
                     track={track}

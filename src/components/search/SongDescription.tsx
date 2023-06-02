@@ -4,7 +4,6 @@ import Like from 'assets/icons/Like.png'
 import LikeFill from 'assets/icons/LikeFill.png'
 import { convertMsToTime } from '~/utils/utils'
 import { useSpotifyStore } from '~/store/spotify'
-
 import SongMoreOptions from './SongMoreOptions'
 
 interface Props {
@@ -60,7 +59,7 @@ const SongDescription = ({ track, isSaved, hideAlbum, onSaveTrack }: Props) => {
       {/* Duration */}
       <span className='ml-8 w-8 text-s-gray-8'>{duration}</span>
 
-      <SongMoreOptions />
+      <SongMoreOptions uri={track.uri} />
     </div>
   )
 }

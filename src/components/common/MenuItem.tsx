@@ -1,22 +1,25 @@
 import classNames from 'classnames'
 import React, { forwardRef } from 'react'
-import { CustomReactNode } from './Menu'
+import { Item } from './Menu'
 
-interface Props {
-  item?: string | CustomReactNode
+type Props = Item & {
+  className?: string
 }
 
-const MenuItem = forwardRef<HTMLLIElement, Props>(({ item }: Props, ref) => {
+const MenuItem = forwardRef<HTMLDivElement, Props>(({ content: item, action, className }: Props, ref) => {
   return (
-    <li
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+    <div
       ref={ref}
       className={classNames(
         'h-full w-full rounded-sm bg-s-gray-2 text-white/90 hover:bg-s-gray-14 hover:text-white',
-        typeof item === 'string' && 'p-[10px]'
+        typeof item === 'string' && 'p-[10px]',
+        className
       )}
+      onClick={action}
     >
       {item}
-    </li>
+    </div>
   )
 })
 

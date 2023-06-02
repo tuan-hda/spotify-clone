@@ -1,9 +1,11 @@
 import Like from 'assets/icons/Like.png'
+import LikeFill from 'assets/icons/LikeFill.png'
 import { useSpotifyStore } from '~/store/spotify'
 import useImmutableSWR from 'swr/immutable'
 import { shallow } from 'zustand/shallow'
 import { CustomLink } from '../common'
 import ArtistCredit from '../common/ArtistCredit'
+import useSWR from 'swr'
 
 const Track = () => {
   const [playbackState, spotifyApi] = useSpotifyStore((state) => [state.playbackState, state.spotifyApi], shallow)
@@ -11,6 +13,23 @@ const Track = () => {
     spotifyApi.getMyRecentlyPlayedTracks({ limit: 1 })
   )
   const track = playbackState?.track_window.current_track ?? data?.body.items.at(0)?.track
+  const { data: savedData, mutate } = useSWR(
+    track !== undefined ? ['/saved-tracks', track] : null,
+    async ([, track]) => {
+      return spotifyApi.containsMySavedTracks([track.id || ''])
+    }
+  )
+  const isSaved = savedData?.body.at(0)
+  const saveTrack = async () => {
+    if (track?.id) {
+      if (!isSaved) {
+        await spotifyApi.addToMySavedTracks([track.id])
+      } else {
+        await spotifyApi.removeFromMySavedTracks([track.id])
+      }
+      mutate()
+    }
+  }
 
   if (!track) return <div className='col-span-3' />
 
@@ -35,8 +54,8 @@ const Track = () => {
       </div>
 
       <div className='ml-1 flex-shrink-0'>
-        <button className='flex h-8 w-8 cursor-auto brightness-75 hover:brightness-100'>
-          <img className='m-auto h-4' src={Like} alt='Like Button' />
+        <button onClick={saveTrack} className='flex h-8 w-8 cursor-auto brightness-75 hover:brightness-100'>
+          <img className='m-auto h-4' src={isSaved ? LikeFill : Like} alt='Like Button' />
         </button>
       </div>
     </div>

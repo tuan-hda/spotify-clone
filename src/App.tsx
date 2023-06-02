@@ -5,6 +5,8 @@ import { getNewAccessToken } from './api/spotify.api'
 import { useSpotifyStore } from './store/spotify'
 import routes from './config/routes'
 import usePlayer from './hooks/usePlayer'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const router = createBrowserRouter(createRoutesFromElements(routes))
 
@@ -36,6 +38,20 @@ export default function App() {
         revalidateOnFocus: false
       }}
     >
+      <ToastContainer
+        position='bottom-center'
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        className='mb-20 '
+        toastClassName='bg-[#2E77D0]'
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme='dark'
+      />
       <Suspense fallback={<div className='h-screen w-screen bg-black'></div>}>
         <RouterProvider router={router} />
       </Suspense>

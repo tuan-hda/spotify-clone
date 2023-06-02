@@ -14,5 +14,6 @@ export const popupConfig: Omit<PopupProps, 'children'> = {
   },
   arrow: false,
   on: 'click',
+
   nested: true
 }

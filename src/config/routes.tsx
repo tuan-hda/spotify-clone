@@ -38,7 +38,7 @@ export const paths: { [key: string]: Path } = {
   searchArtist: { path: '/search/:value/artists' },
   section: { path: '/section/:section', fallback: SectionSkeleton },
   login: { path: '/login', fallback: Fragment },
-  playlist: { path: '/playlist/:playlistId' },
+  playlist: { path: '/playlist/:playlistId', fallback: Fragment },
   library: { path: '/collection/playlists' },
   tracks: { path: '/collection/tracks', fallback: Fragment }
 }
