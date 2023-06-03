@@ -9,12 +9,15 @@ type Props = {
   name?: string
   totalSongs?: number
   duration?: number
+  owner?: SpotifyApi.UserObjectPublic
 }
 
-function PlaylistDescription({ name, totalSongs = 0, duration = 0 }: Props) {
+function PlaylistDescription({ name, owner, totalSongs = 0, duration = 0 }: Props) {
   const spotifyApi = useSpotifyStore((state) => state.spotifyApi)
-  const { data: user } = useSWR('/get-me', async () => spotifyApi.getMe())
+  const { data: currentUser } = useSWR('/get-me', async () => spotifyApi.getMe())
   const textRef = useRef<HTMLHeadingElement | null>(null)
+  const user = owner ? (owner.id === currentUser?.body.id ? currentUser.body : owner) : currentUser?.body
+
   useAutoFont(textRef)
 
   return (
@@ -26,9 +29,11 @@ function PlaylistDescription({ name, totalSongs = 0, duration = 0 }: Props) {
       {/* <h2 className='mt-4 font-bold tracking-tighter text-white'>{name}</h2> */}
       <div className='mt-5 flex items-center gap-1'>
         {/* Avatar */}
-        <img src={user?.body.images?.at(0)?.url} alt='User Avatar' className='mb-1 h-6 w-6 rounded-full' />
+        {user?.images?.at(0)?.url && (
+          <img src={user?.images?.at(0)?.url} alt='User Avatar' className='mb-1 h-6 w-6 rounded-full' />
+        )}
         <CustomLink to='#' className='font-bold text-white hover:underline'>
-          {user?.body.display_name}
+          {user?.display_name}
         </CustomLink>
 
         <div>

@@ -68,7 +68,7 @@ const Playlist = () => {
         <PlaylistCover id={id} image={image} name={name} />
 
         {/* Description */}
-        <PlaylistDescription name={name} totalSongs={totalSongs} duration={totalDuration} />
+        <PlaylistDescription owner={data?.body.owner} name={name} totalSongs={totalSongs} duration={totalDuration} />
       </div>
 
       <PlaylistDetail uri={uri} fromColor={toColor} tracks={items.map((item) => item.track)} play={play} />
