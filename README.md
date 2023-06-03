@@ -1,6 +1,7 @@
 # spotify-clone
 ## Head to the site
 https://spotify-zen.onrender.com/
+
 This app is in development mode since Spotify won't grant extension access for this personal project. To access above URL you might direct me your email address so I can add you to allow authentication list. 
 ## Update
 Spotify has updated their UI, so this clone might be quite different from the current version of Spotify Web Player.
