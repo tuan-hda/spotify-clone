@@ -9,13 +9,15 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { handleError } from '~/utils/https'
 import useSWR from 'swr'
-import EditDetailModal from './EditDetailModal'
 import MenuItem from '../common/MenuItem'
 import { PopupActions } from 'reactjs-popup/dist/types'
+import { usePlaylistStore } from '~/store/playlistStore'
+import { shallow } from 'zustand/shallow'
+import { copyToClipboard } from '~/utils/clipboard'
 function PlaylistPopup() {
   const spotifyApi = useSpotifyStore((state) => state.spotifyApi)
   const [show, setShow] = useState(false)
-  const [editShow, setEditShow] = useState(false)
+  const [toggleEditShow] = usePlaylistStore((state) => [state.toggle], shallow)
   const { playlistId } = useParams()
   const navigate = useNavigate()
   const { mutate } = useSWR('/get-current-user-playlists', async () => spotifyApi.getUserPlaylists())
@@ -23,17 +25,17 @@ function PlaylistPopup() {
 
   const closePopup = () => ref.current?.close()
 
-  const toggle = () => {
-    setShow((prev) => !prev)
+  const close = () => {
+    setShow(false)
     closePopup()
   }
   const toggleEdit = () => {
-    setEditShow((prev) => !prev)
+    toggleEditShow()
     closePopup()
   }
 
   const confirmDelete = async () => {
-    toggle()
+    close()
     try {
       playlistId && (await spotifyApi.unfollowPlaylist(playlistId))
       navigate('/', {
@@ -53,13 +55,16 @@ function PlaylistPopup() {
   }
   const menuItems = [
     { content: 'Edit detail', action: toggleEdit },
-    { content: 'Delete', action: toggle },
+    { content: 'Delete', action: () => setShow(true) },
     {
       content: (
         <div className='border-t border-s-gray-3'>
           <MenuItem closePopup={closePopup} content={'Share'} />
         </div>
-      )
+      ),
+      action: () => {
+        copyToClipboard(window.location.href)
+      }
     }
   ]
 
@@ -80,8 +85,7 @@ function PlaylistPopup() {
       >
         <Menu items={menuItems} />
       </Popup>
-      <DeleteModal show={show} onClose={toggle} confirmDelete={confirmDelete} />
-      <EditDetailModal show={editShow} onClose={toggleEdit} />
+      <DeleteModal show={show} onClose={close} confirmDelete={confirmDelete} />
     </>
   )
 }

@@ -5,6 +5,7 @@ import classNames from 'classnames'
 import { useSpotifyStore } from '~/store/spotify'
 import { shallow } from 'zustand/shallow'
 import { handleError } from '~/utils/https'
+import { usePlaylistStore } from '~/store/playlistStore'
 
 type Props = {
   image?: string
@@ -12,12 +13,14 @@ type Props = {
   id?: string
   mutate?: () => void
   className?: string
+  detailMode?: boolean
 }
 
-function PlaylistCover({ id, className, image, name, mutate }: Props) {
+function PlaylistCover({ detailMode = false, id, className, image, name, mutate }: Props) {
   const [hover, setHover] = useState(false)
   const ref = useRef<HTMLInputElement | null>(null)
   const [spotifyApi] = useSpotifyStore((state) => [state.spotifyApi], shallow)
+  const [toggle] = usePlaylistStore((state) => [state.toggle], shallow)
 
   const changeCover: React.ChangeEventHandler<HTMLInputElement> = async (e) => {
     if (!id) {
@@ -57,13 +60,15 @@ function PlaylistCover({ id, className, image, name, mutate }: Props) {
         className || 'ml-8 h-[192px]  w-[192px] xl:h-[232px] xl:w-[232px] '
       )}
     >
-      <input
-        accept='image/jpeg, image/png, image/jpg'
-        onChange={changeCover}
-        ref={ref}
-        type='file'
-        className='hidden'
-      />
+      {detailMode && (
+        <input
+          accept='image/jpeg, image/png, image/jpg'
+          onChange={changeCover}
+          ref={ref}
+          type='file'
+          className='hidden'
+        />
+      )}
       {image && (
         <>
           <img src={image} alt={name} className='h-full w-full object-cover' />
@@ -78,7 +83,7 @@ function PlaylistCover({ id, className, image, name, mutate }: Props) {
             'bg-s-gray-2': !image
           }
         )}
-        onClick={() => ref.current?.click()}
+        onClick={detailMode ? () => ref.current?.click() : toggle}
       >
         {hover && (
           <>

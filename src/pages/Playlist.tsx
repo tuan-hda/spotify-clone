@@ -7,11 +7,13 @@ import { shallow } from 'zustand/shallow'
 import PlaylistCover from '~/components/playlist/PlaylistCover'
 import { darken } from 'polished'
 import { useColor } from 'color-thief-react'
+import EditDetailModal from '~/components/playlist/EditDetailModal'
+import { usePlaylistStore } from '~/store/playlistStore'
 
 const Playlist = () => {
   const [spotifyApi, deviceId] = useSpotifyStore((state) => [state.spotifyApi, state.deviceId], shallow)
   const { playlistId } = useParams()
-  const { data, mutate } = useSWR(playlistId ? ['/get-playlist', playlistId] : null, async ([, id]) =>
+  const { data } = useSWR(playlistId ? ['/get-playlist', playlistId] : null, async ([, id]) =>
     spotifyApi.getPlaylist(id || '')
   )
 
@@ -20,9 +22,11 @@ const Playlist = () => {
   const totalDuration = data?.body.tracks.items.reduce((prev, curr) => prev + (curr.track?.duration_ms || 0), 0) || 0
   const name = data?.body.name
   const items = data?.body.tracks.items || []
+  const id = data?.body.id
   const { data: dominantData } = useColor(image || '', 'hex', { crossOrigin: 'anonymous', quality: 1 })
   const fromColor = darken(0.1, dominantData || '#535353')
   const toColor = dominantData ? darken(0.4, dominantData) : darken(0.3, '#888')
+  const [showEdit, closeEdit] = usePlaylistStore((state) => [state.show, state.close], shallow)
 
   const play = () => {
     const uri = data?.body.uri || ''
@@ -43,13 +47,14 @@ const Playlist = () => {
         }}
       >
         {/* Image */}
-        <PlaylistCover mutate={mutate} id={data?.body.id} image={image} name={name} />
+        <PlaylistCover id={id} image={image} name={name} />
 
         {/* Description */}
-        <PlaylistDescription name={data?.body.name} totalSongs={totalSongs} duration={totalDuration} />
+        <PlaylistDescription name={name} totalSongs={totalSongs} duration={totalDuration} />
       </div>
 
       <PlaylistDetail fromColor={toColor} tracks={items.map((item) => item.track)} play={play} />
+      <EditDetailModal show={showEdit} onClose={closeEdit} />
     </>
   )
 }

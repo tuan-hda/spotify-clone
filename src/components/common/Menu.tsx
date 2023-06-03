@@ -27,6 +27,19 @@ interface Props {
 
 type WrapperProps = { scroll?: boolean; children?: React.ReactNode }
 
+const Wrapper = ({ scroll = false, children }: WrapperProps) => {
+  if (scroll)
+    return (
+      <div className='h-[400px]'>
+        <ScrollView disableScrollSideEffect>
+          {children}
+          <div className='h-4' />
+        </ScrollView>
+      </div>
+    )
+  return <>{children}</>
+}
+
 const Menu = ({ items, closePopup, scroll = false, dividerIndexes }: Props) => {
   const isItem = (item: string | CustomReactNode | Item): item is Item => {
     return item !== null && item !== undefined && (item as Item).content !== undefined
@@ -43,19 +56,6 @@ const Menu = ({ items, closePopup, scroll = false, dividerIndexes }: Props) => {
       content: item,
       action: () => 1
     }
-  }
-
-  const Wrapper = ({ scroll = false, children }: WrapperProps) => {
-    if (scroll)
-      return (
-        <div className='h-[400px]'>
-          <ScrollView disableScrollSideEffect>
-            {children}
-            <div className='h-4' />
-          </ScrollView>
-        </div>
-      )
-    return <>{children}</>
   }
 
   return (

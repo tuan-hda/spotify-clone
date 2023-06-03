@@ -44,7 +44,7 @@ const Track = () => {
       />
 
       <div className='ellipsis min-w-0 text-white'>
-        <CustomLink to={`/album/${track.id}`} className='text-sm text-white hover:underline'>
+        <CustomLink to={`#`} className='text-sm text-white hover:underline'>
           {track.name}
         </CustomLink>
         <p className='group text-ss font-light text-s-gray-5'>

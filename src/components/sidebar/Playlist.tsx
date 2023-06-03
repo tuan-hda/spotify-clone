@@ -20,6 +20,7 @@ const Playlist = () => {
   return (
     <ScrollView disableScrollSideEffect>
       <div className='sticky top-0 z-[1] h-3 w-full bg-gradient-to-b from-black/80 to-black/0' />
+
       <ul className='relative'>
         {playlists?.map((playlist) => (
           <li

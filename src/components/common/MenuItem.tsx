@@ -13,7 +13,7 @@ const MenuItem = forwardRef<HTMLDivElement, Props>(({ closePopup, content: item,
     <div
       ref={ref}
       className={classNames(
-        'h-full w-full rounded-sm bg-s-gray-2 text-white/90 hover:bg-s-gray-14 hover:text-white',
+        'custom-item h-full w-full rounded-sm bg-s-gray-2 text-white/90 hover:bg-s-gray-14 hover:text-white',
         typeof item === 'string' && 'p-[10px]',
         className
       )}

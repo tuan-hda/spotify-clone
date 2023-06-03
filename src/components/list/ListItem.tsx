@@ -6,6 +6,7 @@ import { shallow } from 'zustand/shallow'
 import classNames from 'classnames'
 import ArtistCredit from '../common/ArtistCredit'
 import ViewArtist from 'assets/icons/ViewArtist.png'
+import { useNavigate } from 'react-router-dom'
 
 interface Props {
   item:
@@ -20,6 +21,7 @@ interface Props {
   releaseDate?: string | false
   owner?: string | false
   shadowFallback?: boolean
+  navigateContainer?: boolean
 }
 
 const FallbackArtist = ({ shadowFallback }: { shadowFallback: boolean }) => (
@@ -40,8 +42,10 @@ const ListItem = ({
   setMaxHeight,
   itemRef,
   releaseDate,
-  owner
+  owner,
+  navigateContainer = false
 }: Props) => {
+  const navigate = useNavigate()
   const [device_id, spotifyApi] = useSpotifyStore((state) => [state.deviceId, state.spotifyApi], shallow)
   const onRefChange = useCallback(
     (node: HTMLDivElement | null) => {
@@ -74,8 +78,20 @@ const ListItem = ({
     else return item.images[0]?.url
   }
 
+  const containerClick = () => {
+    if (navigateContainer) {
+      navigate(`/playlist/${item.id}`, {
+        state: {
+          from: true
+        }
+      })
+    }
+  }
+
   return (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
     <div
+      onClick={containerClick}
       ref={onRefChange}
       className='group cursor-pointer rounded-md bg-s-black-4 p-4 transition duration-300 hover:bg-s-gray-2'
     >

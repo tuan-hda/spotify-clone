@@ -20,7 +20,7 @@ const ArtistCredit = ({ artist, index, disableColorChange = true, isSelected = f
     <Fragment>
       {index > 0 && ', '}
       <CustomLink
-        to={`/artist/${getArtistId()}`}
+        to={`#`}
         className={classNames(
           'hover:underline',
           !disableColorChange && 'group-hover:text-white',

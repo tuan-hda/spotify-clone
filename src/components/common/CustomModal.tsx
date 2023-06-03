@@ -8,7 +8,7 @@ type Props = ModalProps & {
   contentClassName?: string
 }
 
-const EditDetailModal = ({ children, contentClassName, size = 'md', bg = 'light', ...props }: Props) => {
+const CustomModal = ({ children, contentClassName, size = 'md', bg = 'light', ...props }: Props) => {
   const styles = useSpring({
     opacity: props.show ? 1 : 0,
     y: props.show ? 0 : -40,
@@ -35,4 +35,4 @@ const EditDetailModal = ({ children, contentClassName, size = 'md', bg = 'light'
   )
 }
 
-export default EditDetailModal
+export default CustomModal

@@ -8,7 +8,7 @@ import useStyleStore from '~/store/style'
 import { shallow } from 'zustand/shallow'
 import { hexWithOpacityToRgba } from '~/utils/utils'
 import DefaultAvatar from 'assets/img/default_avatar.png'
-import { CustomTooltip, Menu, MenuButton } from '~/components/common'
+import { CustomTooltip, Menu } from '~/components/common'
 import { matchPath, useLocation, useNavigate } from 'react-router-dom'
 import { paths } from '~/config/routes'
 import { default as Popup } from 'reactjs-popup'
@@ -62,14 +62,25 @@ const Header = () => {
   }
 
   const menuItems = [
-    <MenuButton key={1}>
-      Account <NewTab fill='#fff' />
-    </MenuButton>,
-    'Profile',
-    'Settings',
-    <MenuButton key={2} onClick={handleLogout}>
-      Log out
-    </MenuButton>
+    {
+      content: (
+        <div key={1} className='flex h-10 items-center justify-between px-[10px]'>
+          Account <NewTab fill='#fff' />
+        </div>
+      ),
+      action: () => {
+        window.open(
+          'https://www.spotify.com/vn-vi/account/overview/?utm_source=spotify&utm_medium=menu&utm_campaign=your_account',
+          '_blank'
+        )
+      }
+    },
+    { content: 'Profile' },
+    { content: 'Settings' },
+    {
+      content: 'Logout',
+      action: handleLogout
+    }
   ]
 
   return (
@@ -110,7 +121,9 @@ const Header = () => {
           contentStyle={{ padding: '0px', border: 'none', background: 'transparent', boxShadow: 'none' }}
           arrow={false}
         >
-          <Menu items={menuItems} dividerIndexes={[2]} />
+          <div>
+            <Menu items={menuItems} dividerIndexes={[2]} />
+          </div>
         </Popup>
       </header>
     </div>

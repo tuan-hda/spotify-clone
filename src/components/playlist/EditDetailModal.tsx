@@ -8,33 +8,70 @@ import useSWR from 'swr'
 import { useParams } from 'react-router-dom'
 import TextInput from '../common/TextInput'
 import { IoIosClose } from 'react-icons/io'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 type Props = ModalProps
-
+type DataProps = {
+  name: string
+  description?: string
+}
 const EditDetailModal = ({ ...props }: Props) => {
   const { playlistId } = useParams()
   const [spotifyApi] = useSpotifyStore((state) => [state.spotifyApi], shallow)
-  const { data, mutate } = useSWR(playlistId ? ['/get-playlist', playlistId] : null, async ([, id]) =>
-    spotifyApi.getPlaylist(id || '')
-  )
+  const { data, mutate } = useSWR(playlistId ? ['/get-playlist', playlistId] : null, async ([, id]) => {
+    console.log('TRIGGERED')
+    return spotifyApi.getPlaylist(id || '')
+  })
+  const { mutate: mutatePlaylist } = useSWR('/get-current-user-playlists', async () => spotifyApi.getUserPlaylists())
+
+  const fetchAgain = async () => {
+    const res = await spotifyApi.getPlaylist(playlistId || '')
+    mutate(res)
+  }
+
   const image = data?.body.images.at(0)?.url
   const name = data?.body.name
   const desc = data?.body.description
 
-  //   })
-  // }, [name, desc])
+  const nameRef = useRef<HTMLInputElement | null>(null)
+  const descRef = useRef<HTMLTextAreaElement | null>(null)
+
+  useEffect(() => {
+    if (nameRef.current) nameRef.current.value = name || ''
+  }, [name, desc])
 
   const changeDetail = async () => {
     try {
       if (!playlistId) {
         return
       }
-      await spotifyApi.changePlaylistDetails(playlistId, {})
+      const data: DataProps = {
+        name: nameRef.current?.value || ''
+      }
+      if (descRef.current?.value) data.description = descRef.current.value
+      await spotifyApi.changePlaylistDetails(playlistId, data)
+      fetchAgain()
+      mutatePlaylist()
       props.onClose && props.onClose()
     } catch (error) {
       console.log('CHANGE DETAIL ERROR')
       console.log(error)
+    }
+  }
+
+  const setRef = (refName: string) => (ref: unknown) => {
+    if (refName === 'name') {
+      const inputRef = ref as HTMLInputElement
+      nameRef.current = inputRef
+      if (ref && name) {
+        inputRef.value = name
+      }
+    } else {
+      const textAreaRef = ref as HTMLTextAreaElement
+      descRef.current = textAreaRef
+      if (ref && desc) {
+        textAreaRef.value = desc
+      }
     }
   }
 
@@ -46,11 +83,19 @@ const EditDetailModal = ({ ...props }: Props) => {
       </div>
       <div className='h-6' />
       <div className='flex gap-4'>
-        <PlaylistCover className='h-[180px] w-[180px]' id={playlistId} image={image} mutate={mutate} name={name} />
+        <PlaylistCover
+          detailMode
+          className='h-[180px] w-[180px]'
+          id={playlistId}
+          image={image}
+          mutate={fetchAgain}
+          name={name}
+        />
         <div className='flex flex-1 flex-col'>
-          <TextInput containerClassName='h-10' label='Name' placeholder='Hello' />
+          <TextInput ref={(ref) => setRef('name')(ref)} containerClassName='h-10' label='Name' placeholder='Hello' />
           <div className='h-4' />
           <TextInput
+            ref={(ref) => setRef('desc')(ref)}
             className='-mx-2 h-full w-[calc(100%+16px)] resize-none px-2 py-3 placeholder-white/50'
             containerClassName='flex-1'
             label='Description'
