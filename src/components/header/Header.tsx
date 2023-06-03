@@ -55,7 +55,7 @@ const Header = () => {
     try {
       await logout()
       clearSession()
-      window.location.href = window.location.origin + '/login'
+      window.location.href = window.location.origin + '/'
     } catch (error) {
       console.log(error)
     }
@@ -121,7 +121,7 @@ const Header = () => {
           contentStyle={{ padding: '0px', border: 'none', background: 'transparent', boxShadow: 'none' }}
           arrow={false}
         >
-          <div>
+          <div className='mt-2'>
             <Menu items={menuItems} dividerIndexes={[2]} />
           </div>
         </Popup>
