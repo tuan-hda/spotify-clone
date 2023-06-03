@@ -32,9 +32,9 @@ const Utils = () => {
     }
   }
 
-  const onStopResize = async () => {
+  const onStopResize = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     await spotifyPlayer?.setVolume(convertToC(width, maxWidth))
-    stopResize()
+    stopResize(e)
   }
 
   return (

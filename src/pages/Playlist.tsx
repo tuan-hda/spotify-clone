@@ -56,11 +56,13 @@ const Playlist = () => {
     <>
       <div
         className='-top-16 flex h-[340px] items-end bg-gradient-to-b pb-6'
-        style={{
-          '--tw-gradient-from': fromColor,
-          '--tw-gradient-to': toColor,
-          '--tw-gradient-stops': 'var(--tw-gradient-from), var(--tw-gradient-to)'
-        }}
+        style={
+          {
+            '--tw-gradient-from': fromColor,
+            '--tw-gradient-to': toColor,
+            '--tw-gradient-stops': 'var(--tw-gradient-from), var(--tw-gradient-to)'
+          } as React.CSSProperties
+        }
       >
         {/* Image */}
         <PlaylistCover id={id} image={image} name={name} />

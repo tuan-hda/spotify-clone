@@ -40,11 +40,13 @@ const PlaylistDetail = ({ play, uri, tracks = [], hideMenu = false, fromColor }:
     <div className='min-h-[232px] w-full  px-8'>
       <div
         className='absolute -mx-8 h-[232px] w-full bg-gradient-to-b to-s-black-3'
-        style={{
-          '--tw-gradient-from': darken(0.1, fromColor),
-          '--tw-gradient-to': '#121212',
-          '--tw-gradient-stops': 'var(--tw-gradient-from), var(--tw-gradient-to)'
-        }}
+        style={
+          {
+            '--tw-gradient-from': darken(0.1, fromColor),
+            '--tw-gradient-to': '#121212',
+            '--tw-gradient-stops': 'var(--tw-gradient-from), var(--tw-gradient-to)'
+          } as React.CSSProperties
+        }
       />
       <div className='h-5' />
 
