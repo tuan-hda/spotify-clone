@@ -14,6 +14,7 @@ import { PopupActions } from 'reactjs-popup/dist/types'
 import { usePlaylistStore } from '~/store/playlistStore'
 import { shallow } from 'zustand/shallow'
 import { copyToClipboard } from '~/utils/clipboard'
+import classNames from 'classnames'
 function PlaylistPopup() {
   const spotifyApi = useSpotifyStore((state) => state.spotifyApi)
   const [show, setShow] = useState(false)
@@ -22,6 +23,10 @@ function PlaylistPopup() {
   const navigate = useNavigate()
   const { mutate } = useSWR('/get-current-user-playlists', async () => spotifyApi.getUserPlaylists())
   const ref = useRef<PopupActions | null>(null)
+  const { data: user } = useSWR('/get-me', async () => spotifyApi.getMe())
+  const { data } = useSWR(playlistId ? ['/get-playlist', playlistId] : null, async ([, id]) =>
+    spotifyApi.getPlaylist(id || '')
+  )
 
   const closePopup = () => ref.current?.close()
 
@@ -53,20 +58,22 @@ function PlaylistPopup() {
       handleError(error, 'DELETE TRACK')
     }
   }
-  const menuItems = [
-    { content: 'Edit detail', action: toggleEdit },
-    { content: 'Delete', action: () => setShow(true) },
-    {
-      content: (
-        <div className='border-t border-s-gray-3'>
-          <MenuItem closePopup={closePopup} content={'Share'} />
-        </div>
-      ),
-      action: () => {
-        copyToClipboard(window.location.href)
-      }
+
+  const share = (border = true) => ({
+    content: (
+      <div className={classNames(border && 'border-t border-s-gray-3')}>
+        <MenuItem closePopup={closePopup} content={'Share'} />
+      </div>
+    ),
+    action: () => {
+      copyToClipboard(window.location.href)
     }
-  ]
+  })
+
+  const menuItems =
+    user?.body.id === data?.body.owner.id
+      ? [{ content: 'Edit detail', action: toggleEdit }, { content: 'Delete', action: () => setShow(true) }, share()]
+      : [share(false)]
 
   return (
     <>

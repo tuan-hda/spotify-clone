@@ -6,16 +6,19 @@ import { useState } from 'react'
 import SongHeader from '../search/SongHeader'
 import PlaylistPopup from './PlaylistPopup'
 import { darken } from 'polished'
+import FindSong from './FindSong'
+import { shallow } from 'zustand/shallow'
 
 type Props = {
   hideMenu?: boolean
   fromColor: string
   tracks?: (SpotifyApi.TrackObjectFull | null)[]
   play?: () => void
+  uri?: string
 }
 
-const PlaylistDetail = ({ play, tracks = [], hideMenu = false, fromColor }: Props) => {
-  const spotifyApi = useSpotifyStore((state) => state.spotifyApi)
+const PlaylistDetail = ({ play, uri, tracks = [], hideMenu = false, fromColor }: Props) => {
+  const [spotifyApi, playbackState] = useSpotifyStore((state) => [state.spotifyApi, state.playbackState], shallow)
   const [selected, setSelected] = useState(-1)
 
   const { data: savedTracks, mutate: mutateSavedTracks } = useSWR(
@@ -25,6 +28,13 @@ const PlaylistDetail = ({ play, tracks = [], hideMenu = false, fromColor }: Prop
       return spotifyApi.containsMySavedTracks(trackIds)
     }
   )
+
+  const isCurrentPlaying = () => {
+    if (playbackState && !playbackState.paused) {
+      if (playbackState.context.uri === uri) return true
+    }
+    return false
+  }
 
   return (
     <div className='min-h-[232px] w-full  px-8'>
@@ -39,7 +49,15 @@ const PlaylistDetail = ({ play, tracks = [], hideMenu = false, fromColor }: Prop
       <div className='h-5' />
 
       <div className='flex items-center gap-8'>
-        {tracks.length > 0 && <PlayButton onClick={play} size='big' noDisappear className='relative z-10' />}
+        {tracks.length > 0 && (
+          <PlayButton
+            isCurrentPlaying={isCurrentPlaying()}
+            onClick={play}
+            size='big'
+            noDisappear
+            className='relative z-10'
+          />
+        )}
 
         {!hideMenu && <PlaylistPopup />}
       </div>
@@ -69,6 +87,8 @@ const PlaylistDetail = ({ play, tracks = [], hideMenu = false, fromColor }: Prop
           </div>
         </>
       )}
+
+      <FindSong totalTracks={tracks.length} />
     </div>
   )
 }

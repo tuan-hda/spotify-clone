@@ -19,7 +19,6 @@ const EditDetailModal = ({ ...props }: Props) => {
   const { playlistId } = useParams()
   const [spotifyApi] = useSpotifyStore((state) => [state.spotifyApi], shallow)
   const { data, mutate } = useSWR(playlistId ? ['/get-playlist', playlistId] : null, async ([, id]) => {
-    console.log('TRIGGERED')
     return spotifyApi.getPlaylist(id || '')
   })
   const { mutate: mutatePlaylist } = useSWR('/get-current-user-playlists', async () => spotifyApi.getUserPlaylists())
@@ -63,14 +62,14 @@ const EditDetailModal = ({ ...props }: Props) => {
     if (refName === 'name') {
       const inputRef = ref as HTMLInputElement
       nameRef.current = inputRef
-      if (ref && name) {
-        inputRef.value = name
+      if (ref) {
+        inputRef.value = name || ''
       }
     } else {
       const textAreaRef = ref as HTMLTextAreaElement
       descRef.current = textAreaRef
-      if (ref && desc) {
-        textAreaRef.value = desc
+      if (ref) {
+        textAreaRef.value = desc || ''
       }
     }
   }

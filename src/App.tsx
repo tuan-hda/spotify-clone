@@ -1,5 +1,5 @@
 import { createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom'
-import { Suspense, useCallback } from 'react'
+import { useCallback } from 'react'
 import { SWRConfig } from 'swr'
 import { getNewAccessToken } from './api/spotify.api'
 import { useSpotifyStore } from './store/spotify'
@@ -27,7 +27,7 @@ export default function App() {
   return (
     <SWRConfig
       value={{
-        suspense: true,
+        suspense: false,
         onErrorRetry: async (error, _, __, revalidate, { retryCount }) => {
           if (!String(error).includes('The access token expired')) return
           if (retryCount >= 3) return
@@ -52,9 +52,7 @@ export default function App() {
         pauseOnHover
         theme='dark'
       />
-      <Suspense fallback={<div className='h-screen w-screen bg-black'></div>}>
-        <RouterProvider router={router} />
-      </Suspense>
+      <RouterProvider router={router} />
     </SWRConfig>
   )
 }

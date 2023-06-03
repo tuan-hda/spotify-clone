@@ -1,12 +1,12 @@
 import { useSpotifyStore } from '~/store/spotify'
 import useSWR from 'swr'
 
-const useSearch = (value: string | undefined) => {
+const useSearch = (value: string | undefined, songOnly = false) => {
   const spotifyApi = useSpotifyStore((state) => state.spotifyApi)
 
   const { data, isLoading } = useSWR(
     value ? ['/search', value] : null,
-    async ([, value]) => spotifyApi.search(value, ['album', 'artist', 'playlist', 'track']),
+    async ([, value]) => spotifyApi.search(value, songOnly ? ['album', 'artist', 'playlist', 'track'] : ['track']),
     { suspense: false }
   )
 

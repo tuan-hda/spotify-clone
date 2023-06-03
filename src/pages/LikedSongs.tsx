@@ -11,8 +11,10 @@ import { shallow } from 'zustand/shallow'
 const LikedSongs = () => {
   const [spotifyApi, deviceId] = useSpotifyStore((state) => [state.spotifyApi, state.deviceId], shallow)
   const { playlistId } = useParams()
-  const { data } = useSWR(playlistId ? ['/get-playlist', playlistId] : null, async ([, id]) =>
-    spotifyApi.getPlaylist(id || '')
+  const { data } = useSWR(
+    playlistId ? ['/get-playlist', playlistId] : null,
+    async ([, id]) => spotifyApi.getPlaylist(id || ''),
+    { suspense: false }
   )
   const { data: tracksData } = useSWR('/saved-tracks', async () =>
     spotifyApi.getMySavedTracks({

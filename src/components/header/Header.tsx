@@ -55,7 +55,7 @@ const Header = () => {
     try {
       await logout()
       clearSession()
-      navigate('/login')
+      window.location.href = window.location.origin + '/login'
     } catch (error) {
       console.log(error)
     }

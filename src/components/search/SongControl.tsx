@@ -13,9 +13,10 @@ interface Props {
   pauseButton: 'bars' | 'pause'
   index: number
   selected: number
+  find?: boolean
 }
 
-const SongControl = ({ selected, index, pauseButton, isSongTab, track, isCurrent }: Props) => {
+const SongControl = ({ selected, find, index, pauseButton, isSongTab, track, isCurrent }: Props) => {
   const [spotifyApi, device_id, playbackState, player] = useSpotifyStore(
     (state) => [state.spotifyApi, state.deviceId, state.playbackState, state.spotifyPlayer],
     shallow
@@ -66,7 +67,7 @@ const SongControl = ({ selected, index, pauseButton, isSongTab, track, isCurrent
 
   return (
     <div className='col-span-7 flex flex-shrink-0 items-center gap-4'>
-      {isSongTab && (
+      {isSongTab && !find && (
         <div className='flex w-5 justify-end'>
           <p className={classNames('text-base text-s-gray-7 group-hover:hidden', isCurrentPlaying() && 'hidden')}>
             {index + 1}
@@ -90,7 +91,7 @@ const SongControl = ({ selected, index, pauseButton, isSongTab, track, isCurrent
               !isSongTab && 'group-hover:brightness-50',
               !isSongTab && isCurrent() && 'brightness-50'
             )}
-            src={track.album.images[0].url}
+            src={track.album.images.at(0)?.url}
             alt={track.name}
           />
           {!isSongTab && <ToggleButton disableToggle />}

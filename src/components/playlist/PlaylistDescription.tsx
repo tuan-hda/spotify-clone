@@ -28,7 +28,7 @@ function PlaylistDescription({ name, totalSongs = 0, duration = 0 }: Props) {
         {/* Avatar */}
         <img src={user?.body.images?.at(0)?.url} alt='User Avatar' className='mb-1 h-6 w-6 rounded-full' />
         <CustomLink to='#' className='font-bold text-white hover:underline'>
-          Hoàng Đình Anh Tuấn
+          {user?.body.display_name}
         </CustomLink>
 
         <div>

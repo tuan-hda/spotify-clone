@@ -24,7 +24,16 @@ const YourPlaylist = () => {
             <p className='text-base font-normal'>{savedData?.body.total} liked songs</p>
           </div>
           {data?.body.items.map((item) => {
-            if (item) return <ListItem navigateContainer shadowFallback={false} key={item.id} item={item} />
+            if (item)
+              return (
+                <ListItem
+                  hidePlayButton={item.tracks.total === 0}
+                  navigateContainer
+                  shadowFallback={false}
+                  key={item.id}
+                  item={item}
+                />
+              )
           })}
         </div>
       </div>

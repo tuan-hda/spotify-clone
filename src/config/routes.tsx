@@ -2,18 +2,17 @@ import { Route } from 'react-router-dom'
 import { Fragment, lazy } from 'react'
 import { MainSkeleton, SectionSkeleton } from '~/components/skeleton'
 import Playlist from '~/pages/Playlist'
-
-const MainLayout = lazy(() => import('~/layouts/MainLayout'))
-const SearchLayout = lazy(() => import('~/layouts/SearchLayout'))
-const Main = lazy(() => import('~/pages/Main'))
-const Login = lazy(() => import('~/pages/Login'))
-const Section = lazy(() => import('~/pages/Section'))
-const NotFound = lazy(() => import('~/pages/NotFound'))
-const AllResults = lazy(() => import('~/pages/AllResults'))
-const TypeResults = lazy(() => import('~/pages/TypeResults'))
-const SongResults = lazy(() => import('~/pages/SongResults'))
-const YourLibrary = lazy(() => import('~/pages/YourLibrary'))
-const LikedSongs = lazy(() => import('~/pages/LikedSongs'))
+import NotFound from '~/pages/NotFound'
+import MainLayout from '~/layouts/MainLayout'
+import Main from '~/pages/Main'
+import { AllResults } from '~/components/search'
+import TypeResults from '~/pages/TypeResults'
+import SearchLayout from '~/layouts/SearchLayout'
+import SongResults from '~/pages/SongResults'
+import Section from '~/pages/Section'
+import YourLibrary from '~/pages/YourLibrary'
+import LikedSongs from '~/pages/LikedSongs'
+import Login from '~/pages/Login'
 
 interface Path {
   path: string

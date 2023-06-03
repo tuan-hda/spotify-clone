@@ -11,10 +11,15 @@ import EditDetailModal from '~/components/playlist/EditDetailModal'
 import { usePlaylistStore } from '~/store/playlistStore'
 
 const Playlist = () => {
-  const [spotifyApi, deviceId] = useSpotifyStore((state) => [state.spotifyApi, state.deviceId], shallow)
+  const [spotifyApi, device_id, playbackState, player] = useSpotifyStore(
+    (state) => [state.spotifyApi, state.deviceId, state.playbackState, state.spotifyPlayer],
+    shallow
+  )
   const { playlistId } = useParams()
-  const { data } = useSWR(playlistId ? ['/get-playlist', playlistId] : null, async ([, id]) =>
-    spotifyApi.getPlaylist(id || '')
+  const { data } = useSWR(
+    playlistId ? ['/get-playlist', playlistId] : null,
+    async ([, id]) => spotifyApi.getPlaylist(id || ''),
+    { suspense: false }
   )
 
   const image = data?.body.images[0]?.url
@@ -23,17 +28,28 @@ const Playlist = () => {
   const name = data?.body.name
   const items = data?.body.tracks.items || []
   const id = data?.body.id
+  const uri = data?.body.uri
   const { data: dominantData } = useColor(image || '', 'hex', { crossOrigin: 'anonymous', quality: 1 })
   const fromColor = darken(0.1, dominantData || '#535353')
   const toColor = dominantData ? darken(0.4, dominantData) : darken(0.3, '#888')
   const [showEdit, closeEdit] = usePlaylistStore((state) => [state.show, state.close], shallow)
 
+  const isCurrent = () => {
+    if (playbackState) {
+      if (playbackState.context.uri === uri) return true
+    }
+    return false
+  }
+
   const play = () => {
-    const uri = data?.body.uri || ''
-    spotifyApi.play({
-      context_uri: uri,
-      device_id: deviceId
-    })
+    if (isCurrent() && player) {
+      player.togglePlay()
+      return
+    } else
+      spotifyApi.play({
+        device_id,
+        context_uri: uri
+      })
   }
 
   return (
@@ -53,7 +69,7 @@ const Playlist = () => {
         <PlaylistDescription name={name} totalSongs={totalSongs} duration={totalDuration} />
       </div>
 
-      <PlaylistDetail fromColor={toColor} tracks={items.map((item) => item.track)} play={play} />
+      <PlaylistDetail uri={uri} fromColor={toColor} tracks={items.map((item) => item.track)} play={play} />
       <EditDetailModal show={showEdit} onClose={closeEdit} />
     </>
   )

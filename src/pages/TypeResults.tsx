@@ -29,7 +29,7 @@ const TypeResult = () => {
     <div className='autofill mt-5 gap-6 overflow-hidden overflow-x-auto'>
       {matchPlaylist &&
         data?.body.playlists?.items.map((item) => (
-          <ListItem owner={item.owner.display_name} key={item.id} item={item} />
+          <ListItem navigateContainer owner={item.owner.display_name} key={item.id} item={item} />
         ))}
 
       {matchAlbum &&

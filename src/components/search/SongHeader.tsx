@@ -26,7 +26,7 @@ function SongHeader({ transparent = false }: Props) {
   return (
     <div
       ref={ref}
-      className={classNames('sticky z-[2] grid h-9 grid-cols-12 items-center border-b border-s-gray-2 text-s-gray-7', {
+      className={classNames('sticky z-[2] grid h-9 grid-cols-12 items-center border-b border-black/20 text-s-gray-7', {
         'top-16 -mx-8 bg-transparent px-12': transparent,
         'top-28 w-full bg-s-black-5 px-12 ': !transparent
       })}

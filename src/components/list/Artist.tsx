@@ -20,7 +20,7 @@ const Artist = ({ isDefault = false, ...props }: Props) => {
   const [play] = useSpotifyStore((state) => [state.play], shallow)
   const ref = useRef<HTMLImageElement | null>(null)
   const image = images.at(0)?.url || ViewAlbum
-  const { data: dominantData } = useColor(image, 'hex', { crossOrigin: 'anonymous', quality: 1 })
+  const { data: dominantData, loading } = useColor(image, 'hex', { crossOrigin: 'anonymous', quality: 1 })
 
   const dominantColor = darken(0.1, dominantData || '#000')
 
@@ -33,10 +33,10 @@ const Artist = ({ isDefault = false, ...props }: Props) => {
   }, [setDashboardStartColor])
 
   useEffect(() => {
-    if (isDefault) {
+    if (isDefault && !loading) {
       setDefaultStartColor(dominantColor)
     }
-  }, [isDefault, dominantColor, setDefaultStartColor])
+  }, [isDefault, dominantColor, setDefaultStartColor, loading])
 
   return (
     <div

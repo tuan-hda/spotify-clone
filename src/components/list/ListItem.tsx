@@ -22,6 +22,7 @@ interface Props {
   owner?: string | false
   shadowFallback?: boolean
   navigateContainer?: boolean
+  hidePlayButton?: boolean
 }
 
 const FallbackArtist = ({ shadowFallback }: { shadowFallback: boolean }) => (
@@ -43,10 +44,14 @@ const ListItem = ({
   itemRef,
   releaseDate,
   owner,
-  navigateContainer = false
+  navigateContainer = false,
+  hidePlayButton = false
 }: Props) => {
   const navigate = useNavigate()
-  const [device_id, spotifyApi] = useSpotifyStore((state) => [state.deviceId, state.spotifyApi], shallow)
+  const [device_id, spotifyApi, playbackState, player] = useSpotifyStore(
+    (state) => [state.deviceId, state.spotifyApi, state.playbackState, state.spotifyPlayer],
+    shallow
+  )
   const onRefChange = useCallback(
     (node: HTMLDivElement | null) => {
       if (node && setRef) {
@@ -60,7 +65,26 @@ const ListItem = ({
     setMaxHeight && setMaxHeight(itemRef?.offsetHeight || 200)
   }
 
+  const isCurrentPlaying = () => {
+    if (playbackState && !playbackState.paused) {
+      if (playbackState.track_window.current_track.id === item.id && !playbackState.context.uri) return true
+      if (playbackState.context.uri === item.uri) return true
+    }
+    return false
+  }
+
+  const isCurrent = () => {
+    if (playbackState) {
+      if (playbackState.track_window.current_track.id === item.id || playbackState.context.uri === item.uri) return true
+    }
+    return false
+  }
+
   const play = () => {
+    if (isCurrent() && player) {
+      player.togglePlay()
+      return
+    }
     if (item.type === 'track')
       spotifyApi.play({
         device_id,
@@ -110,9 +134,21 @@ const ListItem = ({
         ) : (
           <FallbackArtist shadowFallback={shadowFallback} />
         )}
-        <PlayButton onClick={play} className='absolute bottom-1 right-2 group-hover:-translate-y-2' />
+        {!hidePlayButton && (
+          <PlayButton
+            isCurrentPlaying={isCurrentPlaying()}
+            onClick={(e) => {
+              e.stopPropagation()
+              play()
+            }}
+            className='absolute bottom-1 right-2 group-hover:-translate-y-2'
+          />
+        )}
       </div>
-      <CustomLink to={`/playlist/${item.id}`} className='mt-[18px] block text-base font-bold'>
+      <CustomLink
+        to={item.type === 'playlist' ? `/playlist/${item.id}` : '#'}
+        className='mt-[18px] block text-base font-bold'
+      >
         <abbr title={item.name} className='ellipsis block no-underline'>
           {item.name}
         </abbr>

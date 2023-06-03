@@ -11,7 +11,7 @@ const Section = () => {
   const { section } = useParams()
   assertIsValidSection(section)
   const { fetchFn, mapFn } = sectionRecord(spotifyApi)[section]
-  const { data } = useSWR(section, fetchFn)
+  const { data } = useSWR(section, fetchFn, { suspense: true })
 
   return (
     <>

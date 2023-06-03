@@ -13,6 +13,7 @@ const PlayButton = ({ isCurrentPlaying, noDisappear, size = 'normal', ...props }
   const spotifyPlayer = useSpotifyStore((state) => state.spotifyPlayer)
 
   const onClick: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
+    e.stopPropagation()
     await spotifyPlayer?.activateElement()
     props.onClick && props.onClick(e)
   }

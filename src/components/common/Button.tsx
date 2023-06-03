@@ -8,12 +8,14 @@ interface Props extends React.ComponentPropsWithoutRef<'button'> {
 }
 
 const COLORS_MAP = {
-  green: 'bg-s-green-1 hover:bg-s-green-2 active:bg-s-green-3 hover:scale-105 active:scale-100',
-  white: 'bg-white hover:scale-[1.03]'
+  green: 'bg-s-green-1 hover:bg-s-green-2 active:bg-s-green-3 hover:scale-105 active:scale-100 px-8',
+  white: 'bg-white hover:scale-[1.03] px-8',
+  transparent:
+    'text-white ring-white/50 ring-[1px] focus:outline-0 focus:ring-[1px] active:ring-[2px] active:ring-white'
 }
 const Button = ({ ring = true, color = 'green', fontSize, size = 'normal', ...props }: Props) => {
   const getPadding = () => {
-    if (size === 'small') return '0'
+    if (size === 'small' || color === 'transparent' || size === 'tiny') return '0'
     if (color === 'green') return '16px'
     return '14px'
   }
@@ -23,10 +25,11 @@ const Button = ({ ring = true, color = 'green', fontSize, size = 'normal', ...pr
       {...props}
       type='button'
       className={classNames(
-        'rounded-full px-8 text-center text-sm font-bold tracking-widest text-black transition-colors focus:outline-none',
+        'rounded-full text-center text-sm font-bold tracking-widest text-black transition-colors focus:outline-none',
         COLORS_MAP[color],
         props.className,
         size === 'small' && 'flex h-12 items-center',
+        size === 'tiny' && 'flex h-8 items-center px-4',
         ring && 'focus:ring focus:ring-black focus:ring-offset-4'
       )}
       style={{

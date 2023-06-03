@@ -6,6 +6,8 @@ interface Props<T extends React.ElementType> {
   as?: T
   containerClassName?: string
   className?: string
+  leftIcon?: React.ReactNode
+  rightIcon?: React.ReactNode
 }
 
 const TextInput = forwardRef(
@@ -13,6 +15,8 @@ const TextInput = forwardRef(
     {
       label,
       className,
+      leftIcon,
+      rightIcon,
       containerClassName,
       as: Component = 'input' as T,
       ...props
@@ -29,6 +33,7 @@ const TextInput = forwardRef(
           containerClassName
         )}
       >
+        {leftIcon}
         <span
           className={classNames(
             'absolute -top-2 left-2 text-xs text-white transition duration-300',
@@ -47,6 +52,7 @@ const TextInput = forwardRef(
             className
           )}
         />
+        {rightIcon}
       </div>
     )
   }

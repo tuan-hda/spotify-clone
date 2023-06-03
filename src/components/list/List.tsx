@@ -14,7 +14,7 @@ const List = ({ swrKey }: Props) => {
   const spotifyApi = useSpotifyStore((state) => state.spotifyApi)
   const { ref, setRef, setMaxHeight, Wrapper } = useOneLineGrid()
   const { fetchFn, mapFn } = sectionRecord(spotifyApi)[swrKey]
-  const { data } = useSWR(swrKey, fetchFn)
+  const { data } = useSWR(swrKey, fetchFn, { suspense: true, revalidateOnMount: false })
 
   return (
     <>

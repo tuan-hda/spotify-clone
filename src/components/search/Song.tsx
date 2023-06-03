@@ -15,9 +15,11 @@ interface Props {
   setSelected: (idx: number) => void
   selected: number
   isSongTab?: boolean
+  find?: boolean
 }
 
 const Song = ({
+  find = false,
   selected,
   setSelected,
   track,
@@ -60,6 +62,7 @@ const Song = ({
       style={{ paddingLeft, paddingRight }}
     >
       <SongControl
+        find={find}
         selected={selected}
         index={index}
         pauseButton={pauseButton}
@@ -69,7 +72,7 @@ const Song = ({
       />
 
       {/* Name, Album, Favorite, Duration */}
-      <SongDescription track={track} hideAlbum={hideAlbum} isSaved={isSaved} onSaveTrack={onSaveTrack} />
+      <SongDescription find={find} track={track} hideAlbum={hideAlbum} isSaved={isSaved} onSaveTrack={onSaveTrack} />
     </div>
   )
 }

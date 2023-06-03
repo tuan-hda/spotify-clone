@@ -8,7 +8,6 @@ import { useSpotifyStore } from '~/store/spotify'
 import { toast } from 'react-toastify'
 import { handleError } from '~/utils/https'
 import { useParams } from 'react-router-dom'
-import classNames from 'classnames'
 import { useRef } from 'react'
 import { PopupActions } from 'reactjs-popup/dist/types'
 type Props = {
@@ -19,9 +18,13 @@ type Props = {
 function SongMoreOptions({ uri }: Props) {
   const spotifyApi = useSpotifyStore((state) => state.spotifyApi)
   const { playlistId } = useParams()
-  const { data } = useSWR('/get-current-user-playlists', async () => spotifyApi.getUserPlaylists())
+  const { data } = useSWR('/get-current-user-playlists', async () => spotifyApi.getUserPlaylists(), { suspense: false })
   const { mutate } = useSWR(playlistId ? ['/get-playlist', playlistId] : null)
   const ref = useRef<PopupActions | null>(null)
+  const { data: user } = useSWR('/get-me', async () => spotifyApi.getMe())
+  const { data: playlistData } = useSWR(playlistId ? ['/get-playlist', playlistId] : null, async ([, id]) =>
+    spotifyApi.getPlaylist(id || '')
+  )
 
   const closePopup = () => ref.current?.close()
 
@@ -48,22 +51,12 @@ function SongMoreOptions({ uri }: Props) {
   }
 
   const menuItems = [
-    'Go to song radio',
-    'Go to artist',
-    'Go to album',
-    'Show credits',
-    playlistId && (
-      <MenuItem
-        action={() => callMutate(playlistId)}
-        className='border-t border-s-gray-3/70 '
-        content='Remove from this playlist'
-      />
-    ),
+    playlistId && <MenuItem action={() => callMutate(playlistId)} content='Remove from this playlist' />,
     <Popup
       {...popupConfig}
       key={1}
       trigger={
-        <div className={classNames(!playlistId && 'border-t border-s-gray-3/70')}>
+        <div>
           <MenuItem content='Add to playlist' />
         </div>
       }
@@ -73,6 +66,10 @@ function SongMoreOptions({ uri }: Props) {
       <Menu closePopup={closePopup} scroll items={playlistItems} />
     </Popup>
   ]
+
+  if (playlistId) {
+    if (playlistData?.body.owner.id !== user?.body.id) return <div className='w-8' />
+  }
 
   return (
     <Popup
