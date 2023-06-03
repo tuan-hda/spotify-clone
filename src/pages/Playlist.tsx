@@ -5,8 +5,8 @@ import { PlaylistDetail } from '~/components/playlist'
 import PlaylistDescription from '~/components/playlist/PlaylistDescription'
 import { shallow } from 'zustand/shallow'
 import PlaylistCover from '~/components/playlist/PlaylistCover'
-import { usePalette } from 'react-palette'
 import { darken } from 'polished'
+import { useColor } from 'color-thief-react'
 
 const Playlist = () => {
   const [spotifyApi, deviceId] = useSpotifyStore((state) => [state.spotifyApi, state.deviceId], shallow)
@@ -20,9 +20,9 @@ const Playlist = () => {
   const totalDuration = data?.body.tracks.items.reduce((prev, curr) => prev + (curr.track?.duration_ms || 0), 0) || 0
   const name = data?.body.name
   const items = data?.body.tracks.items || []
-  const { data: dominantData } = usePalette(image || '')
-  const fromColor = darken(0.1, dominantData.vibrant || '#535353')
-  const toColor = darken(0.3, dominantData.vibrant || '#535353')
+  const { data: dominantData } = useColor(image || '', 'hex', { crossOrigin: 'anonymous', quality: 1 })
+  const fromColor = darken(0.1, dominantData || '#535353')
+  const toColor = dominantData ? darken(0.4, dominantData) : darken(0.3, '#888')
 
   const play = () => {
     const uri = data?.body.uri || ''

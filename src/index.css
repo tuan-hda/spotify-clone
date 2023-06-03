@@ -11,6 +11,10 @@
     display: none;
   }
 
+  div:has(> .custom-modal) {
+    background-color: transparent !important;
+  }
+
   div:has(> div.custom-scrollbar) {
     width: 12px !important;
   }

@@ -11,9 +11,10 @@ type Props = {
   name?: string
   id?: string
   mutate?: () => void
+  className?: string
 }
 
-function PlaylistCover({ id, image, name, mutate }: Props) {
+function PlaylistCover({ id, className, image, name, mutate }: Props) {
   const [hover, setHover] = useState(false)
   const ref = useRef<HTMLInputElement | null>(null)
   const [spotifyApi] = useSpotifyStore((state) => [state.spotifyApi], shallow)
@@ -51,7 +52,10 @@ function PlaylistCover({ id, image, name, mutate }: Props) {
     <div
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      className='relative ml-8 h-[192px] w-[192px] gap-2 shadow-s-5 xl:h-[232px] xl:w-[232px]'
+      className={classNames(
+        'relative flex-shrink-0 gap-2 shadow-s-5',
+        className || 'ml-8 h-[192px]  w-[192px] xl:h-[232px] xl:w-[232px] '
+      )}
     >
       <input
         accept='image/jpeg, image/png, image/jpg'

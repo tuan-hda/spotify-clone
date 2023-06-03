@@ -8,6 +8,9 @@ import { useSpotifyStore } from '~/store/spotify'
 import { toast } from 'react-toastify'
 import { handleError } from '~/utils/https'
 import { useParams } from 'react-router-dom'
+import classNames from 'classnames'
+import { useRef } from 'react'
+import { PopupActions } from 'reactjs-popup/dist/types'
 type Props = {
   uri: string
   mutate?: () => void
@@ -18,6 +21,9 @@ function SongMoreOptions({ uri }: Props) {
   const { playlistId } = useParams()
   const { data } = useSWR('/get-current-user-playlists', async () => spotifyApi.getUserPlaylists())
   const { mutate } = useSWR(playlistId ? ['/get-playlist', playlistId] : null)
+  const ref = useRef<PopupActions | null>(null)
+
+  const closePopup = () => ref.current?.close()
 
   const playlistItems = data?.body.items.map((item) => ({
     content: item.name,
@@ -54,23 +60,25 @@ function SongMoreOptions({ uri }: Props) {
       />
     ),
     <Popup
+      {...popupConfig}
       key={1}
       trigger={
-        <div>
+        <div className={classNames(!playlistId && 'border-t border-s-gray-3/70')}>
           <MenuItem content='Add to playlist' />
         </div>
       }
-      {...popupConfig}
       position='left top'
       on='hover'
     >
-      <Menu scroll items={playlistItems} />
+      <Menu closePopup={closePopup} scroll items={playlistItems} />
     </Popup>
   ]
 
   return (
     <Popup
+      ref={ref}
       {...popupConfig}
+      closeOnDocumentClick
       trigger={
         <div className='w-fit pl-2'>
           <CustomTooltip content='More options for New Playlist'>
@@ -81,7 +89,7 @@ function SongMoreOptions({ uri }: Props) {
         </div>
       }
     >
-      <Menu items={menuItems} />
+      <Menu closePopup={closePopup} items={menuItems} />
     </Popup>
   )
 }

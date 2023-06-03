@@ -4,6 +4,7 @@ export const popupConfig: Omit<PopupProps, 'children'> = {
   position: 'bottom left',
   keepTooltipInside: true,
   closeOnDocumentClick: true,
+  closeOnEscape: true,
   repositionOnResize: true,
   contentStyle: {
     marginLeft: '-4px',
@@ -14,6 +15,5 @@ export const popupConfig: Omit<PopupProps, 'children'> = {
   },
   arrow: false,
   on: 'click',
-
   nested: true
 }

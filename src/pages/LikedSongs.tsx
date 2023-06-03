@@ -52,7 +52,7 @@ const LikedSongs = () => {
         <PlaylistDescription name='Liked Songs' totalSongs={totalSongs} />
       </div>
 
-      <PlaylistDetail play={play} tracks={tracksData?.body.items.map((item) => item.track)} startColor='#20173E' />
+      <PlaylistDetail play={play} tracks={tracksData?.body.items.map((item) => item.track)} fromColor='#2B1E52' />
     </>
   )
 }

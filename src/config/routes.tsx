@@ -1,6 +1,7 @@
 import { Route } from 'react-router-dom'
 import { Fragment, lazy } from 'react'
 import { MainSkeleton, SectionSkeleton } from '~/components/skeleton'
+import Playlist from '~/pages/Playlist'
 
 const MainLayout = lazy(() => import('~/layouts/MainLayout'))
 const SearchLayout = lazy(() => import('~/layouts/SearchLayout'))
@@ -11,7 +12,6 @@ const NotFound = lazy(() => import('~/pages/NotFound'))
 const AllResults = lazy(() => import('~/pages/AllResults'))
 const TypeResults = lazy(() => import('~/pages/TypeResults'))
 const SongResults = lazy(() => import('~/pages/SongResults'))
-const Playlist = lazy(() => import('~/pages/Playlist'))
 const YourLibrary = lazy(() => import('~/pages/YourLibrary'))
 const LikedSongs = lazy(() => import('~/pages/LikedSongs'))
 

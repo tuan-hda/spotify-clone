@@ -17,7 +17,8 @@ const Track = () => {
     track !== undefined ? ['/saved-tracks', track] : null,
     async ([, track]) => {
       return spotifyApi.containsMySavedTracks([track.id || ''])
-    }
+    },
+    { suspense: false }
   )
   const isSaved = savedData?.body.at(0)
   const saveTrack = async () => {

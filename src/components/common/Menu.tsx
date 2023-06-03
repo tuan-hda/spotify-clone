@@ -22,11 +22,12 @@ interface Props {
   items?: string[] | CustomReactNode[] | Item[]
   dividerIndexes?: number[]
   scroll?: boolean
+  closePopup?: () => void
 }
 
 type WrapperProps = { scroll?: boolean; children?: React.ReactNode }
 
-const Menu = ({ items, scroll = false, dividerIndexes }: Props) => {
+const Menu = ({ items, closePopup, scroll = false, dividerIndexes }: Props) => {
   const isItem = (item: string | CustomReactNode | Item): item is Item => {
     return item !== null && item !== undefined && (item as Item).content !== undefined
   }
@@ -64,7 +65,7 @@ const Menu = ({ items, scroll = false, dividerIndexes }: Props) => {
           const { content, action } = getItem(item)
           return (
             <Fragment key={index}>
-              <MenuItem action={action} content={content} />
+              <MenuItem closePopup={closePopup} action={action} content={content} />
               {dividerIndexes?.includes(index) && <div className='border-t border-s-gray-14' />}
             </Fragment>
           )

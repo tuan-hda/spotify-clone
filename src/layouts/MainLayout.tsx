@@ -85,7 +85,6 @@ export default function MainLayout() {
               </Suspense>
             </div>
           </div>
-
           {accessToken ? <Player /> : <div className='h-[90px] bg-s-black-5' />}
         </main>
       ) : (
