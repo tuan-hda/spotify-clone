@@ -14,6 +14,7 @@ Some features:
 - Play songs, next, previous, seek
 - Enable repeat, shuffle, adjust volume
 - Like a song (available at search screen only)
+- Manage your playlists: including update detail, add/remove songs, delete playlist
 ## Installation
 - First go to this repository and clone it: https://github.com/tuan-hda/spotify-server
 - Run `npm install` to install above project
