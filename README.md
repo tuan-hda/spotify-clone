@@ -26,5 +26,9 @@ Some features:
 - Frontend: ReactJS, TypeScript, TailwindCSS, Vite, Zustand, swr, ...
 - Backend: NodeJS
 - Other: Spotify Web Api Node (https://github.com/thelinmichael/spotify-web-api-node)
-## Example
+## Preview
 ![Demo](https://github.com/tuan-hda/spotify-clone/blob/master/assets/img/Screenshot%20from%202023-05-14%2008-48-34.png)
+
+![Demo Search](https://github.com/tuan-hda/spotify-clone/assets/93902080/1a29e431-340a-4e69-bbf5-943b6296300b)
+
+![Demo Playlist](https://github.com/tuan-hda/spotify-clone/assets/93902080/01e31f9c-42b0-4bf9-bdc5-5e9f0904a897)
