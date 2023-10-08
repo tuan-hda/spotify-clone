@@ -1,6 +1,5 @@
 # spotify-clone
 ## Head to the site
-https://spotify-zen.onrender.com/
 
 This app is in development mode since Spotify won't grant extension access for this personal project. To access above URL you must have premium account and you need direct me your Spotify email address so I can add you to allow authentication list. 
 ## Update
